@@ -22,13 +22,31 @@
 use strict;
 use warnings;
 use feature qw(say);
+use Time::Piece;
+use Data::Printer;
 
 use DBI;
-
-my $dh = DBI->connect("dbi:SQLite:dbname=archeryLogger.sqlite", "", "", { RaiseError => 1}) or die $DBI::errstr;
+use ArcheryLogger::ArcherySession;
+use ArcheryLogger::ArcheryDatabaseWrapper;
+#my $dh = DBI->connect("dbi:SQLite:dbname=archeryLogger.sqlite", "", "", { RaiseError => 1}) or die $DBI::errstr;
 
 say "Openening DB successfully!";
 
-my $archery_parcour = {};
-my $archery_level = {};
-my 
+my $ses = ArcheryLogger::ArcherySession->new(
+    date => time,
+    name => "Wolf",
+    parcour => 20,
+    level => "Rot",
+    targets => [
+        { 1 => 20 },
+        { 2 => 18 },
+        { 4 => 16 },
+    ],
+    max_score => 300,
+    score_per_target => 13.2,
+    );
+
+
+my $db = ArcheryLogger::ArcheryDatabaseWrapper->new(user => "", password => "", dbname => "archeryLogger.sqlite");
+
+p $db;

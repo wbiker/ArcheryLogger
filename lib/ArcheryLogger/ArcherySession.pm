@@ -11,6 +11,4 @@ has max_score => (is => 'ro');
 has score_per_target => (is => 'ro');
 has targets => (is => 'ro');
 
-
-
 1;
