@@ -25,8 +25,10 @@ use feature qw(say);
 
 use DBI;
 
-my $dh = DBI->connect("dbi:SQLite:dbname='archeryLogger.sqlite'", "", "", { RaiseError => 1}) or die $DBI::errstr;
+my $dh = DBI->connect("dbi:SQLite:dbname=archeryLogger.sqlite", "", "", { RaiseError => 1}) or die $DBI::errstr;
 
 say "Openening DB successfully!";
 
-
+my $archery_parcour = {};
+my $archery_level = {};
+my 
