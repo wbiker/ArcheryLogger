@@ -20,7 +20,6 @@ package ArcheryLogger::ArcheryDatabaseWrapper;
 use Moo;
 use strict;
 use warnings;
-use Data::Printer;
 
 use DBI;
 
@@ -64,9 +63,5 @@ sub BUILDARGS {
 
     return $args;
 };
-
-sub get_all_sessions {
-    
-}
 
 1;
