@@ -1,0 +1,17 @@
+% layout 'default';
+% title 'Welcome';
+<%= $msg %>
+<TABLE>
+   <TR>
+       <TD>Name:</TD>
+       <TD><%= $session.name %></TD>
+        <TD>Pacour:</TD>
+        <TD><%= $session.parcour %></TD>
+    </TR>
+    <TR>
+        <TD>Date:</td>
+        <TD><%= $session.date %></TD>
+        <TD>Level:</TD>
+        <TD><%= $session.level %></TD>
+    </TR>
+</TABLE>

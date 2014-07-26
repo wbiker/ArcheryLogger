@@ -1,0 +1,35 @@
+% layout 'default';
+% title 'Welcome';
+<% my $sessions = stash("session"); %>
+<% if($sessions) { %>
+<TABLE>
+<TR>
+<th>Date:</th>
+<th>Name:</th>
+<th>Parcour:</th>
+<th>TotalScore:</th>
+<th>ScorePerTarget:</Th>
+<th>Edit:</Th>
+<th>Delete</th>
+</TR>
+<% foreach my $session (@{$sessions}) { %>
+<TR>
+<td>
+<%= $session->{date} %>
+</td>
+<td>
+<%= $session->{name} %>
+</td>
+<td>
+<%= $session->{total_score} %>
+</td>
+<td>
+<%= $session->{score_per_target} %>
+</td>
+<td><a href="<%= url_for("/edit_session/id=$session->{id}") %>">Edit</a></td>
+<td><a href="<%= url_for("/delete_session/id=$session->{id}") %>">Delete</a></td>
+</TR>
+<% } %>
+</TABLE>
+<% } %>
+<script src="/js/list_session.js"></script>

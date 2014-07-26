@@ -1,0 +1,102 @@
+% layout 'default';
+% title 'Welcome';
+<%= $msg %>
+<% my $session = stash("session"); %>
+<% if($session) { %>
+<TABLE>
+   <TR>
+       <TD>Name:</TD>
+       <TD><%= $session->{name} %></TD>
+        <TD>Pacour:</TD>
+        <TD><%= $session->{parcour} %></TD>
+        <TD>Total Score:</TD>
+        <TD><%= $session->{total_score} %></TD>
+    </TR>
+    <TR>
+        <TD>Date:</td>
+        <TD><%= $session->{date} %></TD>
+        <TD>Level:</TD>
+        <TD><%= $session->{level} %></TD>
+        <TD>Score per Target:</TD>
+        <TD><%= $session->{score_per_target} %></TD>
+    </TR>
+</TABLE>
+<TABLE>
+<% my $targets = $session->{targets}; %>
+<% my @sorted_keys = sort { $a <=> $b } keys %{$targets};
+<% foreach my $target_key (@sorted_keys) { %>
+<TR>
+<td>
+Target <%= $target_key %>
+</td>
+<td>
+<%= $session->{targets}->{$target_key} %>
+</td>
+</TR
+<% } %>
+</TABLE>
+<% } else { %>
+<FORM id="ff" action="new_session" method="post">
+        <DIV>
+    <TABLE>
+        <TR>
+            <TD><label for="name">Name:</Label>
+            <TD><input id="name" class="easyui-validatebox" type="text" name="name">
+            <TD><LABEL for="parcour">Parcour:</LABEL>
+            <TD>
+            <select name="parcour" onchange="parcourChanged(this.value)">
+                <option value="20">20</option>
+                <option value="28" selected>28</option>
+            </select>
+            </TD>
+        </TR>
+        <TR>
+            <TD><label for="date">Date:</label>
+            <TD><input id="date" type="text" name="date">
+            <TD><LABEL for="level">Level:</label>
+            <TD>
+            <select name="level">
+                <option value="red">Red</option>
+                <option value="blue">Blue</option>
+                <option value="green">Green</option>
+            </select>
+            </TD>
+        </TR>
+    </TABLE>
+    <TABLE id="target_table">
+    <tbody id="tbody">
+        <TR>
+            <% for my $target (1..28) { %>
+                <TD>
+                    <LABEL>Target_<%= $target %></LABEL><BR>
+                    <INPUT type="checkbox" name="<%= $target %>" value="20" id="<%= $target %>_20">20<br>
+                    <INPUT type="checkbox" name="<%= $target %>" value="18" id="<%= $target %>_18">18<br>
+                    <INPUT type="checkbox" name="<%= $target %>" value="16" id="<%= $target %>_16">16<br>
+                    <INPUT type="checkbox" name="<%= $target %>" value="14" id="<%= $target %>_14">14<br>
+                    <INPUT type="checkbox" name="<%= $target %>" value="12" id="<%= $target %>_12">12<br>
+                    <INPUT type="checkbox" name="<%= $target %>" value="10" id="<%= $target %>_10">10<br>
+                    <INPUT type="checkbox" name="<%= $target %>" value="8" id="<%= $target %>_8">8<br>
+                    <INPUT type="checkbox" name="<%= $target %>" value="6" id="<%= $target %>_6">6<br>
+                    <INPUT type="checkbox" name="<%= $target %>" value="4" id="<%= $target %>_4">4<br>
+                </TD>
+                <% if(0 == $target%10) { %>
+                    </TR>
+                    <% if(20 == $target) { %>
+                        <TR id="lastblock">
+                        <% } else { %>
+                            <TR>
+                        <% } %>
+                <% } %>
+            <% } %>
+            </TR>
+        <TR id="submit">
+            <TD>
+            <input type="Submit" value="submit">
+            </TD>
+        </TR>
+        </tbody>
+    </TABLE>
+    </DIV>
+</FORM>
+<% } %>
+<script src="/js/new_session.js"></script>
