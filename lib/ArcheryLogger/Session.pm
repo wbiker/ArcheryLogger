@@ -1,9 +1,12 @@
 package ArcheryLogger::Session;
 use Mojo::Base 'Mojolicious::Controller';
 use Data::Printer;
+use Time::Piece;
 
 sub list_sessions {
     my $self = shift;
+
+    my $db = $self->db;
 
     $self->render;
 }
@@ -35,6 +38,8 @@ sub new_session {
     $session->{score_per_target} = sprintf("%.2f", $score_per_target);
     $session->{total_score} = $total_sum;
     $session->{targets} = $targets;
+
+    store_new_session($self->db, $session);
     $self->render(session => $session);
   }
   else {
@@ -59,6 +64,18 @@ sub get_targets {
     }
 
     return $targets;
+}
+
+sub store_new_session {
+    my $db = shift;
+    my $session = shift;
+
+    my $insert_sth = $db->prepare("INSERT INTO archerysession(parcourid, nameid, levelid, date_epoch, max_score, score_per_target) VALUES(?,?,?,?,?,?)");
+
+    p $session;
+    my $rc = $insert_sth->execute($session->{parcour}, $session->{name}, $session->{level}, 2, $session->{total_score}, $session->{score_per_target});
+
+    p $insert_sth;
 }
 
 1;

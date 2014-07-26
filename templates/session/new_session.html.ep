@@ -41,7 +41,15 @@ Target <%= $target_key %>
     <TABLE>
         <TR>
             <TD><label for="name">Name:</Label>
-            <TD><input id="name" class="easyui-validatebox" type="text" name="name">
+            <TD>
+                <select name="name">
+                    <option value="1">Wolf</option>
+                    <option value="2">Bettina</option>
+                    <option value="3">Werner</option>
+                    <option value="4">Julian</option>
+                    <option value="5">Thomas</option>
+                </select>
+            </TD>
             <TD><LABEL for="parcour">Parcour:</LABEL>
             <TD>
             <select name="parcour" onchange="parcourChanged(this.value)">
@@ -56,9 +64,9 @@ Target <%= $target_key %>
             <TD><LABEL for="level">Level:</label>
             <TD>
             <select name="level">
-                <option value="red">Red</option>
-                <option value="blue">Blue</option>
-                <option value="green">Green</option>
+                <option value="1">Red</option>
+                <option value="2">Blue</option>
+                <option value="3">Green</option>
             </select>
             </TD>
         </TR>
