@@ -3,13 +3,14 @@
 <% my $session = stash("session"); %>
 <% my $scoreid = stash("scoreid"); %>
 <% my $targetid = stash("targetid"); %>
+<% my $parcourid = stash("parcourid"); %>
 <% if($session) { %>
 <TABLE>
    <TR>
        <TD>Name:</TD>
        <TD><%= $session->{name} %></TD>
         <TD>Pacour:</TD>
-        <TD><%= $session->{parcour} %></TD>
+        <TD><%= $parcourid->{$session->{parcour}}->{parcour_value} %></TD>
         <TD>Total Score:</TD>
         <TD><%= $session->{total_score} %></TD>
     </TR>
@@ -54,8 +55,8 @@ Target <%= $target_key %>
             <TD><LABEL for="parcour">Parcour:</LABEL>
             <TD>
             <select name="parcour" onchange="parcourChanged(this.value)">
-                <option value="20">20</option>
-                <option value="28" selected>28</option>
+                <option value="1">20</option>
+                <option value="2" selected>28</option>
             </select>
             </TD>
         </TR>

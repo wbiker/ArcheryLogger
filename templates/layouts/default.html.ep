@@ -7,5 +7,5 @@
     <script type="text/javascript" src="js/jquery.min.js"></script>
     <script type="text/javascript" src="js/jquery.easyui.min.js"></script>
   </head>
-  <body><%= content %><a href="<%= url_for('/') %>">All sessions</a> <a href="<%= url_for('/new_session') %>">New Session</a></body>
+  <body><%= content %></body>
 </html>

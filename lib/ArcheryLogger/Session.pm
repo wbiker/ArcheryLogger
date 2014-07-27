@@ -28,10 +28,11 @@ sub list_sessions {
     while(my $session = $sth->fetchrow_hashref) {
         p $session;
         my $date = $session->{date_epoch};
+        $date = Time::Piece->new($date)->dmy('.');
         my $name = $names->{$session->{nameid}};
-        my $parcour = $session->{parcourid};
+        my $parcour = $parcours->{$session->{parcourid}};
         push($sessions, {
-            date => $session->{date_epoch},
+            date => $date,
             name => $name,
             parcour => $parcour,
             max_score => $session->{max_score},
@@ -48,7 +49,6 @@ sub new_session {
   my $self = shift;
 
   if($self->req->method eq "POST") {
-      $self->render(msg => "Post message");
 
     my $p = $self->req->params->params;
     my $params = { @{$p} };
@@ -58,13 +58,24 @@ sub new_session {
     $session->{date} = delete $params->{date};
     $session->{level} = delete $params->{level};
 
-    my $targets = get_targets($params, $session->{parcour});
+    my $time = Time::Piece->strptime($session->{date}, "%d.%m.%Y");
+    $session->{date} = $time->epoch;
+    my $parcoursth = $self->db->prepare("SELECT * FROM archeryparcour");
+    $parcoursth->execute;
 
+    my $parcourid = $parcoursth->fetchall_hashref('parcourid');
+
+    my $targets = get_targets($params, $parcourid->{$session->{parcour}}->{parcour_value});
+
+    my $scoresth = $self->db->prepare("SELECT * FROM archeryscore");
+    $scoresth->execute;
+    my $scoreids = $scoresth->fetchall_hashref('scoreid');
+    
     my $total_sum;
     foreach my $key (keys %{$targets}) {
-        $total_sum += $targets->{$key};
+        $total_sum += $scoreids->{$targets->{$key}}->{score_value};
     }
-    my $score_per_target = $total_sum / int($session->{parcour});
+    my $score_per_target = $total_sum / $parcourid->{$session->{parcour}}->{parcour_value};
 
     $session->{score_per_target} = sprintf("%.2f", $score_per_target);
     $session->{total_score} = $total_sum;
@@ -83,7 +94,11 @@ sub new_session {
     my $targets_sth = $db->prepare("SELECT * FROM archerytarget");
     $targets_sth->execute;
     my $targetid = $targets_sth->fetchall_hashref('targetid');
-     $self->render(scoreid => $scoreid, targetid => $targetid);
+
+    my $parcoursth = $db->prepare("SELECT * FROM archeryparcour");
+    $parcoursth->execute;
+    my $parcourid = $parcoursth->fetchall_hashref('parcour_value');
+     $self->render(scoreid => $scoreid, targetid => $targetid, parcourid => $parcourid);
   }
 }
 
@@ -111,7 +126,7 @@ sub store_new_session {
 
     my $insert_sth = $db->prepare("INSERT INTO archerysession(parcourid, nameid, levelid, date_epoch, max_score, score_per_target) VALUES(?,?,?,?,?,?)");
 
-    my $rc = $insert_sth->execute($session->{parcour}, $session->{name}, $session->{level}, 2, $session->{total_score}, $session->{score_per_target});
+    my $rc = $insert_sth->execute($session->{parcour}, $session->{name}, $session->{level}, $session->{date}, $session->{total_score}, $session->{score_per_target});
     
     my $session_id = $db->last_insert_id(undef, undef, 'archerysession', undef);
     if($session_id) {

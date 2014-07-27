@@ -2,7 +2,7 @@ var scores = [20, 18, 16, 14, 12, 10, 8, 6, 4];
 
 function parcourChanged(value) {
     console.log("given value:", value);
-    if(20 == value) {
+    if(1 == value) {
         // remove lastblock
         var lastblock = document.getElementById('lastblock');
         console.log("lastblock: ", lastblock);
