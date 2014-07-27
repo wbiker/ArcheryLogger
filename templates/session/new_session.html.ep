@@ -1,7 +1,8 @@
 % layout 'default';
 % title 'Welcome';
-<%= $msg %>
 <% my $session = stash("session"); %>
+<% my $scoreid = stash("scoreid"); %>
+<% my $targetid = stash("targetid"); %>
 <% if($session) { %>
 <TABLE>
    <TR>
@@ -77,15 +78,15 @@ Target <%= $target_key %>
             <% for my $target (1..28) { %>
                 <TD>
                     <LABEL>Target_<%= $target %></LABEL><BR>
-                    <INPUT type="checkbox" name="<%= $target %>" value="20" id="<%= $target %>_20">20<br>
-                    <INPUT type="checkbox" name="<%= $target %>" value="18" id="<%= $target %>_18">18<br>
-                    <INPUT type="checkbox" name="<%= $target %>" value="16" id="<%= $target %>_16">16<br>
-                    <INPUT type="checkbox" name="<%= $target %>" value="14" id="<%= $target %>_14">14<br>
-                    <INPUT type="checkbox" name="<%= $target %>" value="12" id="<%= $target %>_12">12<br>
-                    <INPUT type="checkbox" name="<%= $target %>" value="10" id="<%= $target %>_10">10<br>
-                    <INPUT type="checkbox" name="<%= $target %>" value="8" id="<%= $target %>_8">8<br>
-                    <INPUT type="checkbox" name="<%= $target %>" value="6" id="<%= $target %>_6">6<br>
-                    <INPUT type="checkbox" name="<%= $target %>" value="4" id="<%= $target %>_4">4<br>
+                    <INPUT type="checkbox" name="<%= $targetid->{$target}->{targetid} %>" value="<%= $scoreid->{20}->{scoreid} %>" id="<%= $target %>_20">20<br>
+                    <INPUT type="checkbox" name="<%= $targetid->{$target}->{targetid} %>" value="<%= $scoreid->{18}->{scoreid} %>" id="<%= $target %>_18">18<br>
+                    <INPUT type="checkbox" name="<%= $targetid->{$target}->{targetid} %>" value="<%= $scoreid->{16}->{scoreid} %>" id="<%= $target %>_16">16<br>
+                    <INPUT type="checkbox" name="<%= $targetid->{$target}->{targetid} %>" value="<%= $scoreid->{14}->{scoreid} %>" id="<%= $target %>_14">14<br>
+                    <INPUT type="checkbox" name="<%= $targetid->{$target}->{targetid} %>" value="<%= $scoreid->{12}->{scoreid} %>" id="<%= $target %>_12">12<br>
+                    <INPUT type="checkbox" name="<%= $targetid->{$target}->{targetid} %>" value="<%= $scoreid->{10}->{scoreid} %>" id="<%= $target %>_10">10<br>
+                    <INPUT type="checkbox" name="<%= $targetid->{$target}->{targetid} %>" value="<%= $scoreid->{8}->{scoreid} %>" id="<%= $target %>_8">8<br>
+                    <INPUT type="checkbox" name="<%= $targetid->{$target}->{targetid} %>" value="<%= $scoreid->{6}->{scoreid} %>" id="<%= $target %>_6">6<br>
+                    <INPUT type="checkbox" name="<%= $targetid->{$target}->{targetid} %>" value="<%= $scoreid->{4}->{scoreid} %>" id="<%= $target %>_4">4<br>
                 </TD>
                 <% if(0 == $target%10) { %>
                     </TR>

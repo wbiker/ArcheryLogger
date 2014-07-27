@@ -8,7 +8,39 @@ sub list_sessions {
 
     my $db = $self->db;
 
-    $self->render;
+    my $namesth = $db->prepare("SELECT * FROM archeryname");
+    $namesth->execute;
+    my $names = {};
+    while(my $row = $namesth->fetchrow_hashref) {
+        $names->{$row->{nameid}} = $row->{name_value};
+    }
+
+    my $parcoursth = $db->prepare("SELECT * FROM archeryparcour");
+    $parcoursth->execute;
+    my $parcours = {};
+    while(my $row = $parcoursth->fetchrow_hashref) {
+        $parcours->{$row->{parcourid}} = $row->{parcour_value};
+    }
+
+    my $sessions = [];
+    my $sth = $db->prepare("SELECT * FROM archerysession");
+    $sth->execute;
+    while(my $session = $sth->fetchrow_hashref) {
+        p $session;
+        my $date = $session->{date_epoch};
+        my $name = $names->{$session->{nameid}};
+        my $parcour = $session->{parcourid};
+        push($sessions, {
+            date => $session->{date_epoch},
+            name => $name,
+            parcour => $parcour,
+            max_score => $session->{max_score},
+            score_per_target => $session->{score_per_target},
+            id => $session->{sessionid},
+        });
+    }
+
+    $self->render(template => 'session/list_sessions', sessions => $sessions);
 }
 
 # This action will render a template
@@ -27,7 +59,6 @@ sub new_session {
     $session->{level} = delete $params->{level};
 
     my $targets = get_targets($params, $session->{parcour});
-    p $targets;
 
     my $total_sum;
     foreach my $key (keys %{$targets}) {
@@ -44,7 +75,15 @@ sub new_session {
   }
   else {
     # Render template "example/welcome.html.ep" with message
-     $self->render(msg => "Please fill out");
+    my $db = $self->db;
+    my $st = $db->prepare("SELECT * FROM archeryscore");
+    $st->execute;
+    my $scoreid = $st->fetchall_hashref('score_value');
+
+    my $targets_sth = $db->prepare("SELECT * FROM archerytarget");
+    $targets_sth->execute;
+    my $targetid = $targets_sth->fetchall_hashref('targetid');
+     $self->render(scoreid => $scoreid, targetid => $targetid);
   }
 }
 
@@ -72,10 +111,21 @@ sub store_new_session {
 
     my $insert_sth = $db->prepare("INSERT INTO archerysession(parcourid, nameid, levelid, date_epoch, max_score, score_per_target) VALUES(?,?,?,?,?,?)");
 
-    p $session;
     my $rc = $insert_sth->execute($session->{parcour}, $session->{name}, $session->{level}, 2, $session->{total_score}, $session->{score_per_target});
+    
+    my $session_id = $db->last_insert_id(undef, undef, 'archerysession', undef);
+    if($session_id) {
+        # all went fine insert targets
+        my $targets = $session->{targets};
 
-    p $insert_sth;
+        my $insert_sth = $db->prepare("INSERT INTO archeryshot(sessionid, targetid, scoreid) VALUES(?, ?, ?)");
+        foreach my $target (keys %{$targets}) {
+            $insert_sth->execute($session_id, $target, $targets->{$target});
+        }
+    }
+
+    # store targets:
+    # first need last_insert_id
 }
 
 1;
