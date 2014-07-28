@@ -1,43 +1,8 @@
 % layout 'default';
 % title 'Welcome';
-<% my $session = stash("session"); %>
-<% my $scoreid = stash("scoreid"); %>
+<% my $scorevalue = stash("scorevalue"); %>
 <% my $targetid = stash("targetid"); %>
 <% my $parcourid = stash("parcourid"); %>
-<% if($session) { %>
-<TABLE>
-   <TR>
-       <TD>Name:</TD>
-       <TD><%= $session->{name} %></TD>
-        <TD>Pacour:</TD>
-        <TD><%= $parcourid->{$session->{parcour}}->{parcour_value} %></TD>
-        <TD>Total Score:</TD>
-        <TD><%= $session->{total_score} %></TD>
-    </TR>
-    <TR>
-        <TD>Date:</td>
-        <TD><%= $session->{date} %></TD>
-        <TD>Level:</TD>
-        <TD><%= $session->{level} %></TD>
-        <TD>Score per Target:</TD>
-        <TD><%= $session->{score_per_target} %></TD>
-    </TR>
-</TABLE>
-<TABLE>
-<% my $targets = $session->{targets}; %>
-<% my @sorted_keys = sort { $a <=> $b } keys %{$targets};
-<% foreach my $target_key (@sorted_keys) { %>
-<TR>
-<td>
-Target <%= $target_key %>
-</td>
-<td>
-<%= $session->{targets}->{$target_key} %>
-</td>
-</TR
-<% } %>
-</TABLE>
-<% } else { %>
 <FORM id="ff" action="new_session" method="post">
         <DIV>
     <TABLE>
@@ -76,18 +41,19 @@ Target <%= $target_key %>
     <TABLE id="target_table">
     <tbody id="tbody">
         <TR>
-            <% for my $target (1..28) { %>
+            <% my $target = 1; %>
+            <% for my $targetid (sort { $a <=> $b } keys %{$targetid}) { %>
                 <TD>
                     <LABEL>Target_<%= $target %></LABEL><BR>
-                    <INPUT type="checkbox" name="<%= $targetid->{$target}->{targetid} %>" value="<%= $scoreid->{20}->{scoreid} %>" id="<%= $target %>_20">20<br>
-                    <INPUT type="checkbox" name="<%= $targetid->{$target}->{targetid} %>" value="<%= $scoreid->{18}->{scoreid} %>" id="<%= $target %>_18">18<br>
-                    <INPUT type="checkbox" name="<%= $targetid->{$target}->{targetid} %>" value="<%= $scoreid->{16}->{scoreid} %>" id="<%= $target %>_16">16<br>
-                    <INPUT type="checkbox" name="<%= $targetid->{$target}->{targetid} %>" value="<%= $scoreid->{14}->{scoreid} %>" id="<%= $target %>_14">14<br>
-                    <INPUT type="checkbox" name="<%= $targetid->{$target}->{targetid} %>" value="<%= $scoreid->{12}->{scoreid} %>" id="<%= $target %>_12">12<br>
-                    <INPUT type="checkbox" name="<%= $targetid->{$target}->{targetid} %>" value="<%= $scoreid->{10}->{scoreid} %>" id="<%= $target %>_10">10<br>
-                    <INPUT type="checkbox" name="<%= $targetid->{$target}->{targetid} %>" value="<%= $scoreid->{8}->{scoreid} %>" id="<%= $target %>_8">8<br>
-                    <INPUT type="checkbox" name="<%= $targetid->{$target}->{targetid} %>" value="<%= $scoreid->{6}->{scoreid} %>" id="<%= $target %>_6">6<br>
-                    <INPUT type="checkbox" name="<%= $targetid->{$target}->{targetid} %>" value="<%= $scoreid->{4}->{scoreid} %>" id="<%= $target %>_4">4<br>
+                    <INPUT type="checkbox" name="<%= $targetid %>" value="<%= $scorevalue->{20} %>" id="<%= $targetid %>_20">20<br>
+                    <INPUT type="checkbox" name="<%= $targetid %>" value="<%= $scorevalue->{18} %>" id="<%= $targetid %>_18">18<br>
+                    <INPUT type="checkbox" name="<%= $targetid %>" value="<%= $scorevalue->{16} %>" id="<%= $targetid %>_16">16<br>
+                    <INPUT type="checkbox" name="<%= $targetid %>" value="<%= $scorevalue->{14} %>" id="<%= $targetid %>_14">14<br>
+                    <INPUT type="checkbox" name="<%= $targetid %>" value="<%= $scorevalue->{12} %>" id="<%= $targetid %>_12">12<br>
+                    <INPUT type="checkbox" name="<%= $targetid %>" value="<%= $scorevalue->{10} %>" id="<%= $targetid %>_10">10<br>
+                    <INPUT type="checkbox" name="<%= $targetid %>" value="<%= $scorevalue->{8} %>" id="<%= $targetid %>_8">8<br>
+                    <INPUT type="checkbox" name="<%= $targetid %>" value="<%= $scorevalue->{6} %>" id="<%= $targetid %>_6">6<br>
+                    <INPUT type="checkbox" name="<%= $targetid %>" value="<%= $scorevalue->{4} %>" id="<%= $targetid %>_4">4<br>
                 </TD>
                 <% if(0 == $target%10) { %>
                     </TR>
@@ -97,6 +63,7 @@ Target <%= $target_key %>
                             <TR>
                         <% } %>
                 <% } %>
+                <% $target++; %>
             <% } %>
             </TR>
         <TR id="submit">
@@ -108,5 +75,4 @@ Target <%= $target_key %>
     </TABLE>
     </DIV>
 </FORM>
-<% } %>
 <script src="/js/new_session.js"></script>
