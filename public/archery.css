@@ -1,0 +1,52 @@
+body {
+    background-color: #8CD27E;
+}
+header {
+    background-color: #CDD27E;
+    }
+
+header h1 {
+    padding: 16px 0px 0px 0px;
+    margin-left: 10px;
+}
+
+#logo {
+    float: right;
+}
+
+#listsession table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#listsession table, #listsession th, #listsession td {
+    background-color: #CDD27E;
+    border: 1px solid black;
+    text-align: center;
+}
+
+td {
+    padding: 2px;
+}
+
+nav {
+    background-color: #CDD27E;
+}
+nav ul {
+    margin: 0px;
+    list-style-type: none;
+    padding: 5px;
+}
+nav ul li {
+    display: inline;
+    padding: 5px 10px 5px 10px;
+}
+
+nav ul li a:link, nav ul li a:visited {
+    color: black;
+    border-bottom: none;
+    font-weight: bold;
+}
+nav ul li.selected {
+    background-color: #c8b99c;
+}

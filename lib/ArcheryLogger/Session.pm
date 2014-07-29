@@ -32,11 +32,12 @@ sub new_session {
 
     my $parcourid = get_parcours_by_id($self->db);
     my $scoreids = get_scores_by_id($self->db);
-    my $targets = get_targets($params, $parcourid->{$session->{parcour}});
+    my $targets = get_targets($params, $parcourid->{$session->{parcour}}, $self->db);
     
     my $total_sum = 0;
     foreach my $key (keys %{$targets}) {
-        $total_sum += $scoreids->{$targets->{$key}};
+        my $sum = $scoreids->{$targets->{$key}};
+        $total_sum += $sum;
     }
     my $score_per_target = $total_sum / $parcourid->{$session->{parcour}};
 
@@ -78,8 +79,9 @@ sub remove_session {
 sub get_targets {
     my $params = shift;
     my $parcour = shift // 28;
+    my $db = shift;
 
-    p $params;
+    my $scorevalue = get_scores_by_value($db);
     my $targets = {};
     # go through the targets
     for (my $i=1; $i<=$parcour; $i++) {
@@ -87,7 +89,7 @@ sub get_targets {
             $targets->{$i} = $params->{$i};
         }
         else {
-            $targets->{$i} = 0;
+            $targets->{$i} = $scorevalue->{0};
         }
     }
 

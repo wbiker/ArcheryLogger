@@ -4,12 +4,22 @@
   <title><%= title %></title>
     <link rel="stylesheet" type="text/css" href="js/themes/default/easyui.css">
     <link rel="stylesheet" type="text/css" href="js/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="archery.css">
     <script type="text/javascript" src="js/jquery.min.js"></script>
     <script type="text/javascript" src="js/jquery.easyui.min.js"></script>
   </head>
   <body>
+  <header>
+    <img id="logo" src="images/arrow.gif" alt="banner"></img>
+    <h1>Archery Logger<h1>
+  </header>
+  <nav>
+    <ul>
+        <li><a href="<%= url_for('/'); %>">All Sessions</a></li>
+        <li><a href="<%= url_for('/new_session'); %>">New Session</a></li>
+        <li><a href="<%= url_for('/names'); %>">Names</a></li>
+    </ul>
+  </nav>
   <%= content %>
-  <a href="<%= url_for('/') %>">List Sessions </a>
-  <a href="<%= url_for('/new_session') %>">New Session</a>
   </body>
 </html>

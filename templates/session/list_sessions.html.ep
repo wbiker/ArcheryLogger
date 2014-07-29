@@ -2,6 +2,7 @@
 % title 'Welcome';
 <% my $sessions = stash("sessions"); %>
 <% if($sessions) { %>
+<div id="listsession">
 <TABLE>
 <TR>
 <th>Date:</th>
@@ -34,5 +35,6 @@
 </TR>
 <% } %>
 </TABLE>
+</div>
 <% } %>
 <script src="/js/list_session.js"></script>
