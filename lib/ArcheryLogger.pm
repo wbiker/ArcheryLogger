@@ -78,7 +78,7 @@ sub get_targets {
     my $parcour = shift // 28;
     my $db = $self->db;
 
-    my $scorevalue = get_scores_by_value();
+    my $scorevalue = $self->get_scores_by_value();
     my $targets = {};
     # go through the targets
     for (my $i=1; $i<=$parcour; $i++) {
@@ -118,10 +118,11 @@ sub store_new_session {
 }
 
 sub get_all_sessions {
-    my $db = shift;
+    my $self = shift;
+    my $db = $self->db;
 
-    my $names = get_names_by_id($db);
-    my $parcours = get_parcours_by_id($db);
+    my $names = $self->get_names_by_id();
+    my $parcours = $self->get_parcours_by_id();
 
     my $sessions = [];
     my $sth = $db->prepare("SELECT * FROM archerysession");
@@ -145,7 +146,8 @@ sub get_all_sessions {
 }
 
 sub get_names_by_id {
-    my $db = shift;
+    my $self = shift;
+    my $db = $self->db;
 
     my $names = {};
     my $name_ref = $db->selectall_hashref('SELECT * FROM archeryname', 'nameid');
@@ -158,7 +160,8 @@ sub get_names_by_id {
 }
 
 sub get_parcours_by_id {
-    my $db = shift;
+    my $self = shift;
+    my $db = $self->db;
 
     my $parcours = {};
     my $parcour_ref = $db->selectall_hashref('SELECT * FROM archeryparcour', 'parcourid');
@@ -171,7 +174,8 @@ sub get_parcours_by_id {
 }
 
 sub get_scores_by_id {
-    my $db = shift;
+    my $self = shift;
+    my $db = $self->db;
 
     my $scores = {};
     my $score_ref = $db->selectall_hashref('SELECT * FROM archeryscore', 'scoreid');
@@ -184,7 +188,8 @@ sub get_scores_by_id {
 }
 
 sub get_scores_by_value {
-    my $db = shift;
+    my $self = shift;
+    my $db = $self->db;
 
     my $scores = {};
     my $score_ref = $db->selectall_hashref('SELECT * FROM archeryscore', 'score_value');
@@ -197,7 +202,8 @@ sub get_scores_by_value {
 }
 
 sub get_levels_by_id  {
-    my $db = shift;
+    my $self = shift;
+    my $db = $self->db;
 
     my $levels = {};
     my $level_ref = $db->selectall_hashref('SELECT * FROM archerylevel', 'levelid');
@@ -210,7 +216,8 @@ sub get_levels_by_id  {
 }
 
 sub get_targets_by_id  {
-    my $db = shift;
+    my $self = shift;
+    my $db = $self->db;
 
     my $targets = {};
     my $targets_ref = $db->selectall_hashref('SELECT * FROM archerytarget', 'targetid');
