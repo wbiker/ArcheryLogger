@@ -60,10 +60,11 @@ sub delete_session {
     my $self = shift;
 
     my $params = $self->req->params->to_hash;
-
-    if(exists $params->{id} && $params->{id}) {
+    
+    my $sessionid = $self->stash('sessionid');
+    if($sessionid) {
         # remove session with id wihtin params
-        remove_session($self->db, $params->{id});
+        remove_session($self->db, $sessionid);
     }
     $self->redirect_to('/');
 }

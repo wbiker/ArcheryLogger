@@ -26,7 +26,7 @@ sub startup {
   # Normal route to controller
   $r->get('/')->to('Session#list_sessions');
   $r->get('/new_session')->to('Session#new_session');
-  $r->get('/delete_session')->to('Session#delete_session');
+  $r->get('/delete_session/:sessionid')->to('Session#delete_session');
   $r->post('/new_session')->to('Session#new_session');
 }
 
