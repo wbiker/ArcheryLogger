@@ -6,9 +6,7 @@ use Time::Piece;
 sub list_sessions {
     my $self = shift;
 
-    my $db = $self->db;
-
-    my $sessions = get_all_sessions($db);
+    my $sessions = $self->get_all_sessions();
 
     $self->render(template => 'session/list_sessions', sessions => $sessions);
 }
@@ -30,9 +28,9 @@ sub new_session {
     my $time = Time::Piece->strptime($session->{date}, "%d.%m.%Y");
     $session->{date} = $time->epoch;
 
-    my $parcourid = get_parcours_by_id($self->db);
-    my $scoreids = get_scores_by_id($self->db);
-    my $targets = get_targets($params, $parcourid->{$session->{parcour}}, $self->db);
+    my $parcourid = $self->get_parcours_by_id();
+    my $scoreids = $self->get_scores_by_id();
+    my $targets = $self->get_targets($params, $parcourid->{$session->{parcour}}, $self->db);
     
     my $total_sum = 0;
     foreach my $key (keys %{$targets}) {
@@ -45,13 +43,13 @@ sub new_session {
     $session->{total_score} = $total_sum;
     $session->{targets} = $targets;
 
-    store_new_session($self->db, $session);
+    $self->store_new_session($session);
     $self->redirect_to('/');
   }
   else {
-    my $scorevalue = get_scores_by_value($self->db); # in the template the score IDs are got by the values. These are used as Value for the target checkboxes
-    my $targetid = get_targets_by_id($self->db);
-    my $parcourid = get_targets_by_id($self->db);
+    my $scorevalue = $self->get_scores_by_value(); # in the template the score IDs are got by the values. These are used as Value for the target checkboxes
+    my $targetid = $self->get_targets_by_id();
+    my $parcourid = $self->get_targets_by_id();
     $self->render(targetid => $targetid, scorevalue => $scorevalue, parcourid => $parcourid);
   }
 }
@@ -64,25 +62,27 @@ sub delete_session {
     my $sessionid = $self->stash('sessionid');
     if($sessionid) {
         # remove session with id wihtin params
-        remove_session($self->db, $sessionid);
+        $self->remove_session($sessionid);
     }
     $self->redirect_to('/');
 }
 
 sub remove_session {
-    my $db = shift;
+    my $self = shift;
     my $id = shift;
 
+    my $db = $self->db;
     $db->do("DELETE FROM archerysession WHERE sessionid = ?", undef, $id) or say $db->errstr;
     $db->do("DELETE FROM archeryshot WHERE sessionid = ?", undef, $id) or say $db->errstr;
 }
 
 sub get_targets {
+    my $self = shift;
     my $params = shift;
     my $parcour = shift // 28;
-    my $db = shift;
+    my $db = $self->db;
 
-    my $scorevalue = get_scores_by_value($db);
+    my $scorevalue = $self->get_scores_by_value();
     my $targets = {};
     # go through the targets
     for (my $i=1; $i<=$parcour; $i++) {
@@ -98,9 +98,10 @@ sub get_targets {
 }
 
 sub store_new_session {
-    my $db = shift;
+    my $self = shift;
     my $session = shift;
 
+    my $db = $self->db;
     my $insert_sth = $db->prepare("INSERT INTO archerysession(parcourid, nameid, levelid, date_epoch, max_score, score_per_target) VALUES(?,?,?,?,?,?)");
 
     my $rc = $insert_sth->execute($session->{parcour}, $session->{name}, $session->{level}, $session->{date}, $session->{total_score}, $session->{score_per_target});
@@ -115,16 +116,14 @@ sub store_new_session {
             $insert_sth->execute($session_id, $target, $targets->{$target});
         }
     }
-
-    # store targets:
-    # first need last_insert_id
 }
 
 sub get_all_sessions {
-    my $db = shift;
+    my $self = shift;
+    my $db = $self->db;
 
-    my $names = get_names_by_id($db);
-    my $parcours = get_parcours_by_id($db);
+    my $names = $self->get_names_by_id();
+    my $parcours = $self->get_parcours_by_id();
 
     my $sessions = [];
     my $sth = $db->prepare("SELECT * FROM archerysession");
@@ -148,7 +147,8 @@ sub get_all_sessions {
 }
 
 sub get_names_by_id {
-    my $db = shift;
+    my $self = shift;
+    my $db = $self->db;
 
     my $names = {};
     my $name_ref = $db->selectall_hashref('SELECT * FROM archeryname', 'nameid');
@@ -161,7 +161,8 @@ sub get_names_by_id {
 }
 
 sub get_parcours_by_id {
-    my $db = shift;
+    my $self = shift;
+    my $db = $self->db;
 
     my $parcours = {};
     my $parcour_ref = $db->selectall_hashref('SELECT * FROM archeryparcour', 'parcourid');
@@ -174,7 +175,8 @@ sub get_parcours_by_id {
 }
 
 sub get_scores_by_id {
-    my $db = shift;
+    my $self = shift;
+    my $db = $self->db;
 
     my $scores = {};
     my $score_ref = $db->selectall_hashref('SELECT * FROM archeryscore', 'scoreid');
@@ -187,7 +189,8 @@ sub get_scores_by_id {
 }
 
 sub get_scores_by_value {
-    my $db = shift;
+    my $self = shift;
+    my $db = $self->db;
 
     my $scores = {};
     my $score_ref = $db->selectall_hashref('SELECT * FROM archeryscore', 'score_value');
@@ -200,7 +203,8 @@ sub get_scores_by_value {
 }
 
 sub get_levels_by_id  {
-    my $db = shift;
+    my $self = shift;
+    my $db = $self->db;
 
     my $levels = {};
     my $level_ref = $db->selectall_hashref('SELECT * FROM archerylevel', 'levelid');
@@ -213,7 +217,8 @@ sub get_levels_by_id  {
 }
 
 sub get_targets_by_id  {
-    my $db = shift;
+    my $self = shift;
+    my $db = $self->db;
 
     my $targets = {};
     my $targets_ref = $db->selectall_hashref('SELECT * FROM archerytarget', 'targetid');
