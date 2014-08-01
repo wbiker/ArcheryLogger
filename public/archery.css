@@ -50,3 +50,7 @@ nav ul li a:link, nav ul li a:visited {
 nav ul li.selected {
     background-color: #c8b99c;
 }
+
+.right {
+    text-align: right;
+}

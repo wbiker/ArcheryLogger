@@ -2,11 +2,7 @@
 <html>
   <head>
   <title><%= title %></title>
-    <link rel="stylesheet" type="text/css" href="js/themes/default/easyui.css">
-    <link rel="stylesheet" type="text/css" href="js/themes/icon.css">
     <link rel="stylesheet" type="text/css" href="archery.css">
-    <script type="text/javascript" src="js/jquery.min.js"></script>
-    <script type="text/javascript" src="js/jquery.easyui.min.js"></script>
   </head>
   <body>
   <header>
@@ -16,8 +12,13 @@
   <nav>
     <ul>
         <li><a href="<%= url_for('/'); %>">All Sessions</a></li>
-        <li><a href="<%= url_for('/new_session'); %>">New Session</a></li>
-        <li><a href="<%= url_for('/names'); %>">Names</a></li>
+        <% my $loggedin = session('authenticated'); %>
+        <% if($loggedin) { %>
+            <li><a href="<%= url_for('/new_session'); %>">New Session</a></li>
+            <li><a href="<%= url_for('/logout'); %>">Logout</a></li>
+        <% } else { %>
+                <li><a href="<%= url_for('/login'); %>">Login</a></li>
+        <% } %>
     </ul>
   </nav>
   <%= content %>

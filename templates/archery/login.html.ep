@@ -1,0 +1,15 @@
+% layout 'default';
+% title 'Welcome';
+<form action="<%= url_for('/login') %>" method="POST">
+<table>
+    <tr>
+    <td class="right"><label for="username">User</label></td>
+    <td><input type="text" name="username"><br></td>
+    </tr>
+    <tr>
+    <td class="right"><label for="userpassword">Password</label></td>
+    <td><input type="password" name="userpassword"><br></td>
+    <td><input type="submit" value="Submit"><br></td>
+    </tr>
+</table>
+</form>

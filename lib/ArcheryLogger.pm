@@ -24,9 +24,8 @@ sub startup {
             my $self = shift;
             my $uid = shift;
 
-            my @user_row = $self->db->selectrow_array('SELECT * FROM archerycredentials WHERE userid = ?', [$uid]);
+            #my @user_row = $self->db->selectrow_array('SELECT * FROM archerycredentials WHERE userid = ?', [$uid]);
 
-            p @user_row;
             return "wolf";
         },
         validate_user => sub {
@@ -37,7 +36,7 @@ sub startup {
             use Authen::Simple::DBI;
 
             my $authDB = Authen::Simple::DBI->new(
-                dsn => 'DBI:SQLite',
+                dsn => 'dbi:SQLite:dbname=archeryLogger.sqlite',
                 username => '',
                 password => '',
                 statement => 'SELECT userpw FROM archerycredentials WHERE userid = ?',
@@ -56,11 +55,13 @@ sub startup {
 
   # Normal route to controller
   $r->get('/login')->to('Archery#login');
-  $r->get('/welcome')->to('Archery#welcome');
+  $r->get('/logout')->to('Archery#logout');
   $r->get('/')->to('Session#list_sessions');
   $r->get('/new_session')->to('Session#new_session');
   $r->get('/delete_session/:sessionid')->to('Session#delete_session');
   $r->post('/new_session')->to('Session#new_session');
+  $r->post('/login')->to('Archery#login_check');
+
 }
 
 sub remove_session {

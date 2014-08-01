@@ -8,7 +8,7 @@ sub list_sessions {
 
     my $sessions = $self->app->get_all_sessions();
 
-    $self->render(template => 'session/list_sessions', sessions => $sessions);
+    $self->render(template => 'session/list_sessions', sessions => $sessions, authorized => $self->app->is_user_authenticated);
 }
 
 # This action will render a template
@@ -57,13 +57,16 @@ sub new_session {
 sub delete_session {
     my $self = shift;
 
-    my $params = $self->req->params->to_hash;
+    if($self->session('authenticated')) {
+        my $params = $self->req->params->to_hash;
     
-    my $sessionid = $self->stash('sessionid');
-    if($sessionid) {
-        # remove session with id wihtin params
-        $self->app->remove_session($sessionid);
+        my $sessionid = $self->stash('sessionid');
+        if($sessionid) {
+            # remove session with id wihtin params
+            $self->app->remove_session($sessionid);
+        }
     }
+
     $self->redirect_to('/');
 }
 
