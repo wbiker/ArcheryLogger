@@ -48,9 +48,13 @@ sub new_session {
     }
     my $score_per_target = $total_sum / $parcourid->{$session->{parcour}};
 
+    my $missed_targets = $self->_get_missed_targets($targets);
+    say "missed targets: ", $missed_targets;
+
     $session->{score_per_target} = sprintf("%.2f", $score_per_target);
     $session->{total_score} = $total_sum;
     $session->{targets} = $targets;
+    $session->{missed_target} = $missed_targets;
 
     $self->app->store_new_session($session);
     $self->redirect_to('/');
@@ -61,6 +65,20 @@ sub new_session {
     my $parcourid = $self->app->get_targets_by_id();
     $self->render(targetid => $targetid, scorevalue => $scorevalue, parcourid => $parcourid);
   }
+}
+
+sub _get_missed_targets {
+    my $self = shift;
+    my $targets = shift;
+
+    my $score_names = $self->app->get_scores_by_value();
+    my $null_score_id = $score_names->{0};
+    my $missed_targets = 0;
+    foreach my $target (keys %{$targets}) {
+        $missed_targets++ if $targets->{$target} == $null_score_id;
+    }
+
+    return $missed_targets;
 }
 
 sub delete_session {

@@ -85,6 +85,7 @@ sub get_targets {
     # go through the targets
     for (my $i=1; $i<=$parcour; $i++) {
         if(exists $params->{$i}) {
+            # store the score id in the hash with the target id as key.
             $targets->{$i} = $params->{$i};
         }
         else {
@@ -100,9 +101,9 @@ sub store_new_session {
     my $session = shift;
 
     my $db = $self->db;
-    my $insert_sth = $db->prepare("INSERT INTO archerysession(parcourid, nameid, levelid, date_epoch, max_score, score_per_target) VALUES(?,?,?,?,?,?)");
+    my $insert_sth = $db->prepare("INSERT INTO archerysession(parcourid, nameid, levelid, date_epoch, max_score, score_per_target, missedtarget) VALUES(?,?,?,?,?,?, ?)");
 
-    my $rc = $insert_sth->execute($session->{parcour}, $session->{name}, $session->{level}, $session->{date}, $session->{total_score}, $session->{score_per_target});
+    my $rc = $insert_sth->execute($session->{parcour}, $session->{name}, $session->{level}, $session->{date}, $session->{total_score}, $session->{score_per_target}, $session->{missed_target});
     
     my $session_id = $db->last_insert_id(undef, undef, 'archerysession', undef);
     if($session_id) {
@@ -127,6 +128,7 @@ sub get_all_sessions {
 
     my $names = $self->get_names_by_id();
     my $parcours = $self->get_parcours_by_id();
+    my $levels = $self->get_levels_by_id();
 
     my $sessions = [];
     my $sth = $db->prepare("SELECT * FROM archerysession");
@@ -136,6 +138,7 @@ sub get_all_sessions {
         $date = Time::Piece->new($date)->dmy('.');
         my $name = $names->{$session->{nameid}};
         my $parcour = $parcours->{$session->{parcourid}};
+        my $level = $levels->{$session->{levelid}};
 
 		if($filter eq "all" || $filter eq $session->{nameid}) {
         	push($sessions, {
@@ -145,10 +148,9 @@ sub get_all_sessions {
         	    max_score => $session->{max_score},
     	        score_per_target => $session->{score_per_target},
 	            id => $session->{sessionid},
+                level => $level,
+                missed_targets => $session->{missedtarget},
         	});
-		}
-		else {
-		say "Ignore $name because of filter $filter";
 		}
     }
 
