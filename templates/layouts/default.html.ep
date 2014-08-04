@@ -6,8 +6,8 @@
   </head>
   <body>
   <header>
-    <img id="logo" src="images/arrow.gif" alt="banner"></img>
-    <h1>Archery Logger<h1>
+    <img id="logo" src="images/arrow.gif" alt="banner">
+    <h1>Archery Logger</h1>
   </header>
   <nav>
     <ul>

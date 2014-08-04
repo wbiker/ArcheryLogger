@@ -57,6 +57,7 @@ sub startup {
   $r->get('/login')->to('Archery#login');
   $r->get('/logout')->to('Archery#logout');
   $r->get('/')->to('Session#list_sessions');
+  $r->get('/list_sessions')->to('Session#list_sessions');
   $r->get('/new_session')->to('Session#new_session');
   $r->get('/delete_session/:sessionid')->to('Session#delete_session');
   $r->post('/new_session')->to('Session#new_session');
@@ -120,6 +121,8 @@ sub store_new_session {
 
 sub get_all_sessions {
     my $self = shift;
+	my $filter = shift // "all";
+
     my $db = $self->db;
 
     my $names = $self->get_names_by_id();
@@ -133,14 +136,20 @@ sub get_all_sessions {
         $date = Time::Piece->new($date)->dmy('.');
         my $name = $names->{$session->{nameid}};
         my $parcour = $parcours->{$session->{parcourid}};
-        push($sessions, {
-            date => $date,
-            name => $name,
-            parcour => $parcour,
-            max_score => $session->{max_score},
-            score_per_target => $session->{score_per_target},
-            id => $session->{sessionid},
-        });
+
+		if($filter eq "all" || $filter eq $session->{nameid}) {
+        	push($sessions, {
+    	        date => $date,
+	            name => $name,
+            	parcour => $parcour,
+        	    max_score => $session->{max_score},
+    	        score_per_target => $session->{score_per_target},
+	            id => $session->{sessionid},
+        	});
+		}
+		else {
+		say "Ignore $name because of filter $filter";
+		}
     }
 
     return $sessions;

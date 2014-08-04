@@ -6,9 +6,18 @@ use Time::Piece;
 sub list_sessions {
     my $self = shift;
 
-    my $sessions = $self->app->get_all_sessions();
+	my $name_filter = $self->req->param('selected_name') // 'all';
+	my $sessions = $self->app->get_all_sessions($name_filter);
+	my $names = $self->app->get_names_by_id();
+	# sort names by name for the filter popup
+	my @names = sort { $names->{$a} cmp $names->{$b} } (keys %{$names});
 
-    $self->render(template => 'session/list_sessions', sessions => $sessions, authorized => $self->app->is_user_authenticated);
+	my @names_sorted;
+	foreach my $id (@names) {
+		push(@names_sorted, { id => $id, name => $names->{$id} });
+	}
+
+    $self->render(template => 'session/list_sessions', sessions => $sessions, authorized => $self->app->is_user_authenticated, selected_name => $name_filter, names => \@names_sorted);
 }
 
 # This action will render a template

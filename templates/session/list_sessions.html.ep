@@ -2,41 +2,53 @@
 % title 'Welcome';
 <% my $sessions = stash("sessions"); %>
 <% my $authorized = session('authenticated'); %>
+<% my $selected_name = stash('selected_name') // "all"; %>
+<% my $names = stash('names'); %>
 <% if($sessions) { %>
-<div id="listsession">
-<TABLE>
-<TR>
-<th>Date:</th>
-<th>Name:</th>
-<th>Parcour:</th>
-<th>TotalScore:</th>
-<th>ScorePerTarget:</Th>
-<% if($authorized) { %>
-<th>Delete</th>
-<% } %>
-</TR>
-<% foreach my $session (@{$sessions}) { %>
-<TR>
-<td>
-<%= $session->{date} %>
-</td>
-<td>
-<%= $session->{name} %>
-</td>
-<td>
-<%= $session->{parcour} %>
-</td>
-<td>
-<%= $session->{max_score} %>
-</td>
-<td>
-<%= $session->{score_per_target} %>
-</td>
-<% if($authorized) { %>
-<td><a href="<%= url_for("/delete_session/$session->{id}") %>">Delete</a></td>
-<% } %>
-</TR>
-<% } %>
-</TABLE>
-</div>
+	<form action="/list_sessions" method="GET">
+		<label>Select name for filter</label>
+		<select name="selected_name">
+			<option value="all" selected>All</option>
+			<% foreach my $name (@{$names}) { %>
+				<option value="<%= $name->{id} %>"><%= $name->{name} %></option>
+			<% } %>
+			<input type="Submit" value="Submit"></input>
+		</select>
+	</form>
+	<div id="listsession">
+		<TABLE>
+			<TR>
+				<th>Date:</th>
+				<th>Name:</th>
+				<th>Parcour:</th>
+				<th>TotalScore:</th>
+				<th>ScorePerTarget:</Th>
+				<% if($authorized) { %>
+					<th>Delete</th>
+				<% } %>
+			</TR>
+			<% foreach my $session (@{$sessions}) { %>
+				<TR>
+					<td>
+						<%= $session->{date} %>
+					</td>
+					<td>
+						<%= $session->{name} %>
+					</td>
+					<td>
+						<%= $session->{parcour} %>
+					</td>
+					<td>
+						<%= $session->{max_score} %>
+					</td>
+					<td>
+						<%= $session->{score_per_target} %>
+					</td>
+					<% if($authorized) { %>
+						<td><a href="<%= url_for("/delete_session/$session->{id}") %>">Delete</a></td>
+					<% } %>
+				</TR>
+			<% } %>
+		</TABLE>
+	</div>
 <% } %>
