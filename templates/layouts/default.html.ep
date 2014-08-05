@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
-  <title><%= title %></title>
-    <link rel="stylesheet" type="text/css" href="archery.css">
+	<meta charset="utf-8">
+  	<title><%= title %></title>
+    <link rel="stylesheet" href="archery.css">
   </head>
   <body>
   <header>

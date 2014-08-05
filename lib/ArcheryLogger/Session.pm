@@ -2,6 +2,7 @@ package ArcheryLogger::Session;
 use Mojo::Base 'Mojolicious::Controller';
 use Data::Printer;
 use Time::Piece;
+use utf8;
 
 sub list_sessions {
     my $self = shift;

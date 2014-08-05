@@ -12,8 +12,8 @@
 			<% foreach my $name (@{$names}) { %>
 				<option value="<%= $name->{id} %>"><%= $name->{name} %></option>
 			<% } %>
-			<input type="Submit" value="Submit"></input>
 		</select>
+		<input type="submit" value="submit">
 	</form>
 	<div id="listsession">
 		<TABLE>

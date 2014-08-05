@@ -3,6 +3,7 @@ use Mojo::Base 'Mojolicious';
 use Mojolicious::Plugin::Database;
 use Mojolicious::Plugin::Authentication;
 use Data::Printer;
+use HTML::Entities;
 
 # This method will run once at server start
 sub startup {
@@ -140,6 +141,8 @@ sub get_all_sessions {
         my $parcour = $parcours->{$session->{parcourid}};
         my $level = $levels->{$session->{levelid}};
 
+		my $note = $session->{note};
+
 		if($filter eq "all" || $filter eq $session->{nameid}) {
         	push($sessions, {
     	        date => $date,
@@ -152,9 +155,10 @@ sub get_all_sessions {
                 level => $level,
                 missed_targets => $session->{missed_targets},
 				hit_targets => $session->{hit_targets},
-				note => $session->{note},
+				note => $note,
         	});
 		}
+		say "Note: ", $session->{note} if $session->{note};
     }
 
     return $sessions;
