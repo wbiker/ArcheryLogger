@@ -5,7 +5,7 @@
 <% my $selected_name = stash('selected_name') // "all"; %>
 <% my $names = stash('names'); %>
 <% if($sessions) { %>
-	<form action="/list_sessions" method="GET">
+	<form id="filter" action="/list_sessions" method="GET">
 		<label>Select name for filter</label>
 		<select name="selected_name">
 			<option value="all" selected>All</option>

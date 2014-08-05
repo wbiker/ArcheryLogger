@@ -25,12 +25,17 @@ header h1 {
     text-align: center;
 }
 
+#filter {
+	margin: 10px 0px 10px 5px;
+}
+
 td {
     padding: 2px;
 }
 
 nav {
     background-color: #CDD27E;
+	margin: 10px 0px 10px 0px;
 }
 nav ul {
     margin: 0px;
