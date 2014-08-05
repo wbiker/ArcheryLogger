@@ -33,6 +33,7 @@ sub new_session {
     $session->{parcour} = delete $params->{parcour};
     $session->{date} = delete $params->{date};
     $session->{level} = delete $params->{level};
+	$session->{note} = delete $params->{note};
 
     my $time = Time::Piece->strptime($session->{date}, "%d.%m.%Y");
     $session->{date} = $time->epoch;
@@ -46,15 +47,16 @@ sub new_session {
         my $sum = $scoreids->{$targets->{$key}};
         $total_sum += $sum;
     }
+    my ($missed_targets, $hit_targets) = $self->_get_missed_targets($targets);
     my $score_per_target = $total_sum / $parcourid->{$session->{parcour}};
-
-    my $missed_targets = $self->_get_missed_targets($targets);
-    say "missed targets: ", $missed_targets;
+	my $score_per_hit_targets = $total_sum / $hit_targets;
 
     $session->{score_per_target} = sprintf("%.2f", $score_per_target);
+    $session->{score_per_hit_targets} = sprintf("%.2f", $score_per_hit_targets);
     $session->{total_score} = $total_sum;
     $session->{targets} = $targets;
-    $session->{missed_target} = $missed_targets;
+    $session->{missed_targets} = $missed_targets;
+    $session->{hit_targets} = $hit_targets;
 
     $self->app->store_new_session($session);
     $self->redirect_to('/');
@@ -74,11 +76,16 @@ sub _get_missed_targets {
     my $score_names = $self->app->get_scores_by_value();
     my $null_score_id = $score_names->{0};
     my $missed_targets = 0;
+	my $hit_targets = 0;
     foreach my $target (keys %{$targets}) {
-        $missed_targets++ if $targets->{$target} == $null_score_id;
+        if($targets->{$target} == $null_score_id) {
+			$missed_targets++;
+		} else {
+			$hit_targets++;
+		}
     }
 
-    return $missed_targets;
+    return ($missed_targets, $hit_targets);
 }
 
 sub delete_session {

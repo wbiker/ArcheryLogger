@@ -37,6 +37,14 @@
             </select>
             </TD>
         </TR>
+		<tr>
+			<td>
+				<label for="note">Note:</label>
+			</td>
+			<td colspan="3">
+				<input width="auto" type="text" name="note">
+			</td>
+		</tr>
     </TABLE>
     <TABLE id="target_table">
     <tbody id="tbody">

@@ -101,9 +101,9 @@ sub store_new_session {
     my $session = shift;
 
     my $db = $self->db;
-    my $insert_sth = $db->prepare("INSERT INTO archerysession(parcourid, nameid, levelid, date_epoch, max_score, score_per_target, missedtarget) VALUES(?,?,?,?,?,?, ?)");
+    my $insert_sth = $db->prepare("INSERT INTO archerysession(parcourid, nameid, levelid, date_epoch, max_score, score_per_target, missed_targets, hit_targets, score_per_hit_targets, note) VALUES(?,?,?,?,?,?,?,?,?,?)");
 
-    my $rc = $insert_sth->execute($session->{parcour}, $session->{name}, $session->{level}, $session->{date}, $session->{total_score}, $session->{score_per_target}, $session->{missed_target});
+    my $rc = $insert_sth->execute($session->{parcour}, $session->{name}, $session->{level}, $session->{date}, $session->{total_score}, $session->{score_per_target}, $session->{missed_targets}, $session->{hit_targets}, $session->{score_per_hit_targets}, $session->{note});
     
     my $session_id = $db->last_insert_id(undef, undef, 'archerysession', undef);
     if($session_id) {
@@ -147,9 +147,12 @@ sub get_all_sessions {
             	parcour => $parcour,
         	    max_score => $session->{max_score},
     	        score_per_target => $session->{score_per_target},
+    	        score_per_hit_targets => $session->{score_per_hit_targets},
 	            id => $session->{sessionid},
                 level => $level,
-                missed_targets => $session->{missedtarget},
+                missed_targets => $session->{missed_targets},
+				hit_targets => $session->{hit_targets},
+				note => $session->{note},
         	});
 		}
     }
