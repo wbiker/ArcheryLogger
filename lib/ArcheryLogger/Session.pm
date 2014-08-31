@@ -66,7 +66,8 @@ sub new_session {
     my $scorevalue = $self->app->get_scores_by_value(); # in the template the score IDs are got by the values. These are used as Value for the target checkboxes
     my $targetid = $self->app->get_targets_by_id();
     my $parcourid = $self->app->get_targets_by_id();
-    $self->render(targetid => $targetid, scorevalue => $scorevalue, parcourid => $parcourid);
+	my $nameid = $self->app->get_names_by_id();
+    $self->render(targetid => $targetid, scorevalue => $scorevalue, parcourid => $parcourid, nameid => $nameid);
   }
 }
 

@@ -3,6 +3,7 @@
 <% my $scorevalue = stash("scorevalue"); %>
 <% my $targetid = stash("targetid"); %>
 <% my $parcourid = stash("parcourid"); %>
+<% my $nameid = stash("nameid"); %>
 <FORM id="ff" action="new_session" method="post">
         <DIV>
     <TABLE>
@@ -10,11 +11,9 @@
             <TD><label for="name">Name:</Label>
             <TD>
                 <select name="name">
-                    <option value="1">Wolf</option>
-                    <option value="2">Bettina</option>
-                    <option value="3">Werner</option>
-                    <option value="4">Julian</option>
-                    <option value="5">Thomas</option>
+					<% foreach my $key (keys $nameid) { %>
+                    	<option value="<%= $key %>"><%= $nameid->{$key} %></option>
+					<% } %>
                 </select>
             </TD>
             <TD><LABEL for="parcour">Parcour:</LABEL>
