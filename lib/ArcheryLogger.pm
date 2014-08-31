@@ -125,7 +125,7 @@ sub get_all_sessions {
     my $self = shift;
 	my $filter_name = shift // "all";
     my $filter_parcour = shift // 'all';
-
+    print "Filter parcour: ", $filter_parcour, "\n";
     my $db = $self->db;
 
     my $names = $self->get_names_by_id();
@@ -143,9 +143,10 @@ sub get_all_sessions {
         my $level = $levels->{$session->{levelid}};
 
 		my $note = $session->{note};
-
+        my $parcour_id = $session->{parcourid};
+        print "parcour from db: ", $parcour, "\n";
 		if($filter_name eq "all" || $filter_name eq $session->{nameid}) {
-            if($filter_parcour eq 'all' || $filter_parcour eq $parcour) {
+            if($filter_parcour eq 'all' || $filter_parcour eq $parcour_id) {
             	push($sessions, {
         	        date => $date,
 	                name => $name,
