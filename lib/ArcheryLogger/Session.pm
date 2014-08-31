@@ -8,7 +8,8 @@ sub list_sessions {
     my $self = shift;
 
 	my $name_filter = $self->req->param('selected_name') // 'all';
-	my $sessions = $self->app->get_all_sessions($name_filter);
+    my $parcour_filter = $self->req->param('selected_parcour') // 'all';
+	my $sessions = $self->app->get_all_sessions($name_filter, $parcour_filter);
 	my $names = $self->app->get_names_by_id();
 	# sort names by name for the filter popup
 	my @names = sort { $names->{$a} cmp $names->{$b} } (keys %{$names});
@@ -17,6 +18,15 @@ sub list_sessions {
 	foreach my $id (@names) {
 		push(@names_sorted, { id => $id, name => $names->{$id} });
 	}
+
+    my $parcours = $self->app->get_parcours_by_id();
+    my @parcours = sort { $parcours->{$a}->{parcour_value} cmp $parcours->{$b}->{parcour_value} } (keys %{$parcours});
+
+    my @parcours_sorted;
+    foreach my $parcour_id (@parcours) {
+        push(@parcours_sorted, {id => $parcour_id, name => $parcours->{$parcour_id}});
+    }
+
 
     $self->render(template => 'session/list_sessions', sessions => $sessions, authorized => $self->app->is_user_authenticated, selected_name => $name_filter, names => \@names_sorted);
 }

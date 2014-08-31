@@ -123,7 +123,8 @@ sub store_new_session {
 
 sub get_all_sessions {
     my $self = shift;
-	my $filter = shift // "all";
+	my $filter_name = shift // "all";
+    my $filter_parcour = shift // 'all';
 
     my $db = $self->db;
 
@@ -143,20 +144,22 @@ sub get_all_sessions {
 
 		my $note = $session->{note};
 
-		if($filter eq "all" || $filter eq $session->{nameid}) {
-        	push($sessions, {
-    	        date => $date,
-	            name => $name,
-            	parcour => $parcour,
-        	    max_score => $session->{max_score},
-    	        score_per_target => $session->{score_per_target},
-    	        score_per_hit_targets => $session->{score_per_hit_targets},
-	            id => $session->{sessionid},
-                level => $level,
-                missed_targets => $session->{missed_targets},
-				hit_targets => $session->{hit_targets},
-				note => $note,
-        	});
+		if($filter_name eq "all" || $filter_name eq $session->{nameid}) {
+            if($filter_parcour eq 'all' || $filter_parcour eq $parcour) {
+            	push($sessions, {
+        	        date => $date,
+	                name => $name,
+                	parcour => $parcour,
+            	    max_score => $session->{max_score},
+        	        score_per_target => $session->{score_per_target},
+        	        score_per_hit_targets => $session->{score_per_hit_targets},
+	                id => $session->{sessionid},
+                    level => $level,
+                    missed_targets => $session->{missed_targets},
+    				hit_targets => $session->{hit_targets},
+				    note => $note,
+        	    });
+            }
 		}
 		say "Note: ", $session->{note} if $session->{note};
     }

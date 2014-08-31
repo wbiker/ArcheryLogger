@@ -3,6 +3,7 @@
 <% my $sessions = stash("sessions"); %>
 <% my $authorized = session('authenticated'); %>
 <% my $selected_name = stash('selected_name') // "all"; %>
+<% my $selected_parcour = stash('selected_parcour') // 'all'; %>
 <% my $names = stash('names'); %>
 <% if($sessions) { %>
 	<form id="filter" action="/list_sessions" method="GET">
@@ -13,6 +14,13 @@
 				<option value="<%= $name->{id} %>"><%= $name->{name} %></option>
 			<% } %>
 		</select>
+        <label>Select parcour for filter</label>
+        <select name="select_parcour">
+            <option value="all" selected>All</options>
+            <% foreach my $parcour (@{parcour_names}) { %>
+                <option value="<%= $parcour->{id} %>"><%= $parcour->{value} %></option>
+            <% } %>
+        </select>
 		<input type="submit" value="submit">
 	</form>
 	<div id="listsession">
