@@ -61,6 +61,8 @@ sub startup {
   $r->get('/list_sessions')->to('Session#list_sessions');
   $r->get('/new_session')->to('Session#new_session');
   $r->get('/delete_session/:sessionid')->to('Session#delete_session');
+  $r->get('/users')->to('User#list_users');
+  $r->get('/users/:user_id')->to('User#list_user');
   $r->post('/new_session')->to('Session#new_session');
   $r->post('/login')->to('Archery#login_check');
 
