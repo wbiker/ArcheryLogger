@@ -1,0 +1,10 @@
+% layout 'default';
+% title 'Welcome';
+<% my $sessions = stash("sessions"); %>
+<% my $authorized = session('authenticated'); %>
+<% my $selected_name = stash('selected_name') // "all"; %>
+<% my $selected_parcour = stash('selected_parcour') // 'all'; %>
+<% my $parcour_names = stash('parcour_names'); %>
+<% my $names = stash('names'); %>
+
+
