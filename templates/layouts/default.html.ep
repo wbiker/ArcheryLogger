@@ -3,11 +3,11 @@
   <head>
 	<meta charset="utf-8">
   	<title><%= title %></title>
-    <link rel="stylesheet" href="archery.css">
+    <link rel="stylesheet" href="/archery.css">
   </head>
   <body>
   <header>
-    <img id="logo" src="images/arrow.gif" alt="banner">
+    <img id="logo" src="/images/arrow.gif" alt="banner">
     <h1>Archery Logger</h1>
   </header>
   <nav>

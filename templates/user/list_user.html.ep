@@ -1,10 +1,18 @@
 % layout 'default';
 % title 'Welcome';
 <% my $sessions = stash("sessions"); %>
-<% my $authorized = session('authenticated'); %>
-<% my $selected_name = stash('selected_name') // "all"; %>
-<% my $selected_parcour = stash('selected_parcour') // 'all'; %>
-<% my $parcour_names = stash('parcour_names'); %>
-<% my $names = stash('names'); %>
 
+<table>
+<tr>
+<th>Date</th>
+<th>Score Per Hit Target</th>
+</tr>
+% for my $session (@{$sessions}) {
+<tr>
+<td><%= $session->{date} %></td>
+<td><%= $session->{score_per_hit_targets} %></td>
+</tr>
+% }
+</table>
 
+<img alt="score per hit target chart" src="data:image/png;base64,<%= $image %>" />

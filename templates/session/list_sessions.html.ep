@@ -46,7 +46,7 @@
 						<%= $session->{date} %>
 					</td>
 					<td>
-						<%= $session->{name} %>
+						<a href="<%= url_for("/users/$session->{name_id}") %>"><%= $session->{name} %></a>
 					</td>
 					<td>
 						<%= $session->{parcour} %>

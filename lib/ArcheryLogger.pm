@@ -1,4 +1,5 @@
 package ArcheryLogger;
+use utf8;
 use Mojo::Base 'Mojolicious';
 use Mojolicious::Plugin::Database;
 use Mojolicious::Plugin::Authentication;
@@ -61,7 +62,6 @@ sub startup {
   $r->get('/list_sessions')->to('Session#list_sessions');
   $r->get('/new_session')->to('Session#new_session');
   $r->get('/delete_session/:sessionid')->to('Session#delete_session');
-  $r->get('/users')->to('User#list_users');
   $r->get('/users/:user_id')->to('User#list_user');
   $r->post('/new_session')->to('Session#new_session');
   $r->post('/login')->to('Archery#login_check');
@@ -127,7 +127,6 @@ sub get_all_sessions {
     my $self = shift;
 	my $filter_name = shift // "all";
     my $filter_parcour = shift // 'all';
-    print "Filter parcour: ", $filter_parcour, "\n";
     my $db = $self->db;
 
     my $names = $self->get_names_by_id();
@@ -146,12 +145,12 @@ sub get_all_sessions {
 
 		my $note = $session->{note};
         my $parcour_id = $session->{parcourid};
-        print "parcour from db: ", $parcour, "\n";
 		if($filter_name eq "all" || $filter_name eq $session->{nameid}) {
             if($filter_parcour eq 'all' || $filter_parcour eq $parcour_id) {
             	push($sessions, {
         	        date => $date,
 	                name => $name,
+                    name_id => $session->{nameid},
                 	parcour => $parcour,
             	    max_score => $session->{max_score},
         	        score_per_target => $session->{score_per_target},
@@ -164,7 +163,6 @@ sub get_all_sessions {
         	    });
             }
 		}
-		say "Note: ", $session->{note} if $session->{note};
     }
 
     return $sessions;
