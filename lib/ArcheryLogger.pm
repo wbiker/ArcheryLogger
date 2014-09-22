@@ -160,6 +160,7 @@ sub get_all_sessions {
                     missed_targets => $session->{missed_targets},
     				hit_targets => $session->{hit_targets},
 				    note => $note,
+                    pi => $session->{pi},
         	    });
             }
 		}
