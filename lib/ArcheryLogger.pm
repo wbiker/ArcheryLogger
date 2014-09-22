@@ -110,7 +110,7 @@ sub store_new_session {
 	# $session->{level} is the levelid. At the moment it works because 
 	# Red is 1, blue is 2 and green is 3.
 	# Should that change in the future the pi feature will be broken.
-	my $pi = int(($session->{hit_targets} * 3) / $session->{level});
+	my $pi = int(($session->{hit_targets} * $session->{score_per_target}) / $session->{level});
     my $rc = $insert_sth->execute($session->{parcour}, $session->{name}, $session->{level}, $session->{date}, $session->{total_score}, $session->{score_per_target}, $session->{missed_targets}, $session->{hit_targets}, $session->{score_per_hit_targets}, $session->{note}, $pi);
     
     my $session_id = $db->last_insert_id(undef, undef, 'archerysession', undef);
