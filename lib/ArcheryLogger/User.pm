@@ -31,6 +31,7 @@ sub list_user {
     }
 
     my $g = GD::Graph::lines->new();
+    $g->set(zero_axis => 1, values_vertical => 1);
     my $gd = $g->plot(\@data) or print $g->error;
     
     my $image_base64_enc = encode_base64($gd->png);
