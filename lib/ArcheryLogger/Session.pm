@@ -32,6 +32,14 @@ sub list_sessions {
     $self->render(template => 'session/list_sessions', sessions => $sessions, authorized => $self->app->is_user_authenticated, selected_name => $name_filter, names => \@names_sorted, parcour_names => $parcours_sorted, selected_parcour => $parcour_filter);
 }
 
+sub show_sessions {
+    my $self = shift;
+    my $epoch = $self->param('epoch');
+
+    my $sessions = $self->app->get_all_sessions_by_epoch($epoch);
+    $self->stash(template => 'session/show_sessions', sessions => $sessions, authorized => $self->app->is_user_authenticated);
+}
+
 # This action will render a template
 sub new_session {
   my $self = shift;

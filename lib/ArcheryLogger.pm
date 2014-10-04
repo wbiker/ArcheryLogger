@@ -5,6 +5,7 @@ use Mojolicious::Plugin::Database;
 use Mojolicious::Plugin::Authentication;
 use Data::Printer;
 use HTML::Entities;
+use Time::Piece; 
 
 # This method will run once at server start
 sub startup {
@@ -60,6 +61,7 @@ sub startup {
   $r->get('/logout')->to('Archery#logout');
   $r->get('/')->to('Session#list_sessions');
   $r->get('/list_sessions')->to('Session#list_sessions');
+  $r->get('/session/:epoch')->to('Session#show_sessions');
   $r->get('/new_session')->to('Session#new_session');
   $r->get('/delete_session/:sessionid')->to('Session#delete_session');
   $r->get('/users/:user_id')->to('User#list_user');
@@ -154,6 +156,7 @@ sub get_all_sessions {
             if($filter_parcour eq 'all' || $filter_parcour eq $parcour_id) {
             	push($sessions, {
         	        date => $date,
+                    date_epoch => $session->{date_epoch},
 	                name => $name,
                     name_id => $session->{nameid},
                 	parcour => $parcour,
@@ -171,6 +174,47 @@ sub get_all_sessions {
 		}
     }
 
+    return $sessions;
+}
+
+sub get_all_sessions_by_epoch {
+    my $self = shift;
+    my $epoch = shift;
+
+    my $names = $self->get_names_by_id();
+    my $parcours = $self->get_parcours_by_id();
+    my $levels = $self->get_levels_by_id();
+
+    my $sth = $self->db->prepare("SELECT * FROM archerysession WHERE date_epoch = ?");
+    
+    my $sessions = [];
+    $sth->execute($epoch);
+    while(my $session = $sth->fetchrow_hashref) {
+        my $date = $session->{date_epoch};
+        $date = Time::Piece->new($date)->dmy('.');
+        my $name = $names->{$session->{nameid}};
+        my $parcour = $parcours->{$session->{parcourid}};
+        my $level = $levels->{$session->{levelid}};
+
+		my $note = $session->{note};
+        my $parcour_id = $session->{parcourid};
+            	push($sessions, {
+        	        date => $date,
+                    date_epoch => $session->{date_epoch},
+	                name => $name,
+                    name_id => $session->{nameid},
+                	parcour => $parcour,
+            	    max_score => $session->{max_score},
+        	        score_per_target => $session->{score_per_target},
+        	        score_per_hit_targets => $session->{score_per_hit_targets},
+	                id => $session->{sessionid},
+                    level => $level,
+                    missed_targets => $session->{missed_targets},
+    				hit_targets => $session->{hit_targets},
+				    note => $note,
+                    pi => $session->{pi},
+        	    });
+    }
     return $sessions;
 }
 

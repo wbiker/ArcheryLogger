@@ -1,29 +1,7 @@
 % layout 'default';
 % title 'Welcome';
 <% my $sessions = stash("sessions"); %>
-<% my $authorized = session('authenticated'); %>
-<% my $selected_name = stash('selected_name') // "all"; %>
-<% my $selected_parcour = stash('selected_parcour') // 'all'; %>
-<% my $parcour_names = stash('parcour_names'); %>
-<% my $names = stash('names'); %>
 <% if($sessions) { %>
-	<form id="filter" action="/list_sessions" method="GET">
-		<label>Select name for filter</label>
-		<select name="selected_name">
-			<option value="all" selected>All</option>
-			<% foreach my $name (@{$names}) { %>
-				<option value="<%= $name->{id} %>"><%= $name->{name} %></option>
-			<% } %>
-		</select>
-        <label>Select parcour for filter</label>
-        <select name="selected_parcour">
-            <option value="all" selected>All</options>
-            <% foreach my $parcour (@{$parcour_names}) { %>
-                <option value="<%= $parcour->{id} %>"><%= $parcour->{name} %></option>
-            <% } %>
-        </select>
-		<input type="submit" value="submit">
-	</form>
 	<div id="listsession">
 		<TABLE>
 			<TR>
@@ -44,7 +22,7 @@
 			<% foreach my $session (@{$sessions}) { %>
 				<TR>
 					<td>
-						<a href="<%= url_for("/session/$session->{date_epoch}") %>"><%= $session->{date} %></a>
+						<%= $session->{date} %>
 					</td>
 					<td>
 						<a href="<%= url_for("/users/$session->{name_id}") %>"><%= $session->{name} %></a>
