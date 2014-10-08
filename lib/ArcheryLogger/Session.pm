@@ -37,7 +37,13 @@ sub show_sessions {
     my $epoch = $self->param('epoch');
 
     my $sessions = $self->app->get_all_sessions_by_epoch($epoch);
-    $self->stash(template => 'session/show_sessions', sessions => $sessions, authorized => $self->app->is_user_authenticated);
+
+    my $pictures = $self->app->get_all_pictures_by_epoch($epoch);
+    $self->stash(pictures => $pictures); 
+    $self->stash(epoch => $epoch);
+    my $auth = $self->app->is_user_authenticated;
+    $self->app->log->debug("Auth: ".$auth);
+    $self->render(template => 'session/show_sessions', sessions => $sessions, authorized => $auth);
 }
 
 # This action will render a template

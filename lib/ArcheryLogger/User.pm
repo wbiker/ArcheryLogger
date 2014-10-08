@@ -31,11 +31,23 @@ sub list_user {
     }
 
     my $g = GD::Graph::lines->new();
-    $g->set(zero_axis => 1, values_vertical => 1);
+    $g->set(zero_axis => 1, values_vertical => 1, x_number_format => \&turn_label);
     my $gd = $g->plot(\@data) or print $g->error;
     
     my $image_base64_enc = encode_base64($gd->png);
     $self->stash(image => $image_base64_enc);
+}
+
+sub turn_label {
+    my $label = shift;
+
+    my @characters = split('', $label);
+    my $ret = "";
+    for my $chat (@characters) {
+        $ret .= "$chat\n";
+    }
+    print $ret;
+    return $ret;
 }
 
 1;

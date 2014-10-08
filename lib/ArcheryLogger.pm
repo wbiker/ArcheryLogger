@@ -67,6 +67,7 @@ sub startup {
   $r->get('/users/:user_id')->to('User#list_user');
   $r->post('/new_session')->to('Session#new_session');
   $r->post('/login')->to('Archery#login_check');
+  $r->post('/picture/store')->to('Picture#store_picture');
 
 }
 
@@ -126,6 +127,7 @@ sub store_new_session {
         }
     }
 
+    #my $meta_session_sth = $db->prepare("INSERT INTO archerymetasession(dateepoch) VALUES(?)");
     # store targets:
     # first need last_insert_id
 }
@@ -300,6 +302,35 @@ sub get_targets_by_id  {
     }
 
     return $targets;
+}
+
+sub insert_picture {
+    my $self = shift;
+    my $file = shift;
+    my $epoch = shift;
+    my $width = shift;
+    my $height = shift;
+
+    my $pic_sth = $self->db->prepare("INSERT INTO archerypicture(picture, dateepoch, picturewidth, pictureheight) VALUES(?,?,?,?)");
+    $pic_sth->execute($file, $epoch, $width, $height);
+}
+
+sub get_all_pictures_by_epoch {
+    my $self = shift;
+    my $epoch = shift;
+
+    my $pics_array = $self->db->selectall_arrayref("SELECT picture, picturewidth, pictureheight FROM archerypicture WHERE dateepoch = '$epoch'", { Slice => {}});
+    
+    my $pictures = [];
+    foreach my $pic (@{$pics_array}) {
+        my $width = $pic->{picturewidth};
+        my $height = $pic->{pictureheight};
+        $width = int($width / 3);
+        $height = int($height / 3);
+        push($pictures, { picture =>  $pic->{picture}, width => $width, height => $height});
+    }
+
+    return $pictures;
 }
 
 1;
