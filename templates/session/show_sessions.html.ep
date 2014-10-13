@@ -1,5 +1,6 @@
 % layout 'default';
 % title 'Welcome';
+% use Encode;
 <% my $sessions = stash("sessions"); %>
 <% if($sessions) { %>
 	<div id="listsession">
@@ -49,7 +50,7 @@
                         <%= $session->{pi} %>
                     </td>
 					<td>
-						<%= $session->{note} %>
+						<%= decode_utf8($session->{note}) %>
 					</td>
 					<% if($authorized) { %>
 						<td><a href="<%= url_for("/delete_session/$session->{id}") %>">Delete</a></td>
