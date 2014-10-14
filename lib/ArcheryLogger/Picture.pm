@@ -54,5 +54,11 @@ sub store_picture {
     $self->redirect_to("/session/$epoch");
 }
 
+sub list_pictures {
+    my $self = shift;
+
+    my $pics = $self->app->get_all_pictures();
+    $self->stash(pics => $pics);
+}
 
 1;

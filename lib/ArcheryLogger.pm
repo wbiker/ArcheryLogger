@@ -67,6 +67,7 @@ sub startup {
   $r->get('/new_session')->to('Session#new_session');
   $r->get('/delete_session/:sessionid')->to('Session#delete_session');
   $r->get('/users/:user_id')->to('User#list_user');
+  $r->get('/pictures')->to('Picture#list_pictures');
   $r->post('/new_session')->to('Session#new_session');
   $r->post('/login')->to('Archery#login_check');
   $r->post('/picture/store')->to('Picture#store_picture');
@@ -331,6 +332,24 @@ sub get_all_pictures_by_epoch {
         $height = int($height / 3);
         my $pic_cont = read_file($pic->{picture});
         push($pictures, { picture =>  $pic_cont, width => $width, height => $height});
+    }
+
+    return $pictures;
+}
+
+sub get_all_pictures {
+    my $self = shift;
+
+    my $pics_array = $self->db->selectall_arrayref("SELECT picture, dateepoch, picturewidth, pictureheight FROM archerypicture", { Slice => {}});
+    
+    my $pictures = [];
+    foreach my $pic (@{$pics_array}) {
+        my $width = $pic->{picturewidth};
+        my $height = $pic->{pictureheight};
+        $width = int($width / 3);
+        $height = int($height / 3);
+        my $pic_cont = read_file($pic->{picture});
+        push($pictures, { picture =>  $pic_cont, width => $width, height => $height, epoch => $pic->{dateepoch}});
     }
 
     return $pictures;

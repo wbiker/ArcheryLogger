@@ -1,0 +1,24 @@
+% layout 'default';
+% title 'Welcome';
+% use Encode;
+<% my $pics = stash("pics"); %>
+<% if($pics) { %>
+	<div id="listsession">
+		<TABLE>
+            <tr>
+            % my $row_counter = 0;
+			<% foreach my $pic (@{$pics}) { %>
+            % if(0 == ($row_counter++ % 6)) {
+                </tr>
+                <tr>
+            % }
+					<td>
+						<a href="<%= url_for("/picture/$pic->{epoch}") %>"><img src="data:image/jpeg;base64,<%= $pic->{picture} %>" width="<%= $pic->{width} %>" height="<%= $pic->{height} %>"/></a>
+					</td>
+			<% } %>
+            </tr>
+		</TABLE>
+	</div>
+<% } else { %>
+No pics found
+% }

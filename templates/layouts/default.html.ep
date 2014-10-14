@@ -13,6 +13,7 @@
   <nav>
     <ul>
         <li><a href="<%= url_for('/'); %>">All Sessions</a></li>
+        <li><a href="<%= url_for('/pictures'); %>">All Pictures</a></li>
         <% my $loggedin = session('authenticated'); %>
         <% if($loggedin) { %>
             <li><a href="<%= url_for('/new_session'); %>">New Session</a></li>
