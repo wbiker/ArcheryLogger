@@ -1,10 +1,13 @@
 package ArcheryLogger::Picture;
 use Mojo::Base 'Mojolicious::Controller';
 use Data::Printer;
-use Time::Piece;
+use Time::Moment;
+use Digest::MD5 qw(md5_hex);
 use MIME::Base64 qw(encode_base64);
 use GD;
 use GD::Image;
+use File::Spec::Functions qw(catfile catdir);
+
 use utf8;
 
 sub store_picture {
@@ -35,8 +38,18 @@ sub store_picture {
         $source_height, # source height
     );
     my $file_content = encode_base64($destImg->jpeg());
-
-    $self->app->insert_picture($file_content, $epoch, $dest_width, $dest_height);
+    my $pic_path = $self->app->config('picture_path');
+    my $time = Time::Moment->from_epoch($epoch);
+    my $path_to_store_pic = $time->year.$time->month.$time->day_of_month;
+    my $pfad = catdir($pic_path, $path_to_store_pic);
+    mkdir($pfad) unless -e $pfad;
+    my $hex_file_name = md5_hex($file_content);
+    my $file_path = catfile($pfad, $hex_file_name);
+    open(my $fh, ">", $file_path);
+    print $fh $file_content;
+    close($fh);
+    
+    $self->app->insert_picture($file_path, $epoch, $dest_width, $dest_height);
 
     $self->redirect_to("/session/$epoch");
 }

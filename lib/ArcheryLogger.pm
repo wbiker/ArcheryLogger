@@ -6,6 +6,7 @@ use Mojolicious::Plugin::Authentication;
 use Data::Printer;
 use HTML::Entities;
 use Time::Piece; 
+use File::Slurp;
 
 # This method will run once at server start
 sub startup {
@@ -17,7 +18,7 @@ sub startup {
         dsn => 'dbi:SQLite:dbname=archeryLogger.sqlite',
         username => '',
         password => '',
-        options => { 'foreign_keys' => 1 },
+        options => { 'foreign_keys' => 1, 'auto_vacuum' => 1 },
         helper => 'db',
     });
 
@@ -50,6 +51,7 @@ sub startup {
             return undef;
         },
     });
+    $self->plugin('config');
   #push(@{$self->static->paths}, $ENV{PWD}."/root");
   #p $self->static;
 
@@ -306,13 +308,13 @@ sub get_targets_by_id  {
 
 sub insert_picture {
     my $self = shift;
-    my $file = shift;
+    my $file_path = shift;
     my $epoch = shift;
     my $width = shift;
     my $height = shift;
 
     my $pic_sth = $self->db->prepare("INSERT INTO archerypicture(picture, dateepoch, picturewidth, pictureheight) VALUES(?,?,?,?)");
-    $pic_sth->execute($file, $epoch, $width, $height);
+    $pic_sth->execute($file_path, $epoch, $width, $height);
 }
 
 sub get_all_pictures_by_epoch {
@@ -327,7 +329,8 @@ sub get_all_pictures_by_epoch {
         my $height = $pic->{pictureheight};
         $width = int($width / 3);
         $height = int($height / 3);
-        push($pictures, { picture =>  $pic->{picture}, width => $width, height => $height});
+        my $pic_cont = read_file($pic->{picture});
+        push($pictures, { picture =>  $pic_cont, width => $width, height => $height});
     }
 
     return $pictures;
