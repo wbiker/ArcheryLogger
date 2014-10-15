@@ -58,7 +58,11 @@ sub list_pictures {
     my $self = shift;
 
     my $pics = $self->app->get_all_pictures();
-    $self->stash(pics => $pics);
+    my $pics_hash = {};
+    for my $pic (@$pics) {
+        push(@{$pics_hash->{$pic->{epoch}}}, $pic);
+    }
+    $self->stash(pics => $pics_hash);
 }
 
 1;

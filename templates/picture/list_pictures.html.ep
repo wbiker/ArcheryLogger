@@ -1,20 +1,26 @@
 % layout 'default';
 % title 'Welcome';
 % use Encode;
+% use Time::Moment;
+
 <% my $pics = stash("pics"); %>
 <% if($pics) { %>
 	<div id="listsession">
 		<TABLE>
             <tr>
-            % my $row_counter = 0;
-			<% foreach my $pic (@{$pics}) { %>
-            % if(0 == ($row_counter++ % 6)) {
-                </tr>
-                <tr>
-            % }
-					<td>
-						<a href="<%= url_for("/picture/$pic->{epoch}") %>"><img src="data:image/jpeg;base64,<%= $pic->{picture} %>" width="<%= $pic->{width} %>" height="<%= $pic->{height} %>"/></a>
+                <th>Session Time</th>
+                <th>Pictures</th>
+            </tr>
+			<% foreach my $epoch (sort { $a <=> $b  } keys %{$pics}) { %>
+            <tr>
+            % my $time = Time::Moment->from_epoch($epoch);
+            <td><%= $time->strftime("%d.%m.%Y") %></td>
+                % for my $pic (@{$pics->{$epoch}}) {
+				<td>
+					<a href="<%= url_for("/session/$pic->{epoch}") %>"><img src="data:image/jpeg;base64,<%= $pic->{picture} %>" width="<%= $pic->{width} %>" height="<%= $pic->{height} %>"/></a>
 					</td>
+                % }
+            </tr>
 			<% } %>
             </tr>
 		</TABLE>

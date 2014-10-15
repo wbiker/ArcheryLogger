@@ -318,30 +318,20 @@ sub insert_picture {
     $pic_sth->execute($file_path, $epoch, $width, $height);
 }
 
-sub get_all_pictures_by_epoch {
+sub get_all_pictures {
     my $self = shift;
     my $epoch = shift;
 
-    my $pics_array = $self->db->selectall_arrayref("SELECT picture, picturewidth, pictureheight FROM archerypicture WHERE dateepoch = '$epoch'", { Slice => {}});
-    
-    my $pictures = [];
-    foreach my $pic (@{$pics_array}) {
-        my $width = $pic->{picturewidth};
-        my $height = $pic->{pictureheight};
-        $width = int($width / 3);
-        $height = int($height / 3);
-        my $pic_cont = read_file($pic->{picture});
-        push($pictures, { picture =>  $pic_cont, width => $width, height => $height});
+    my $query;
+    if($epoch) {
+        $query = "SELECT picture, picturewidth, pictureheight, dateepoch FROM archerypicture WHERE dateepoch = '$epoch'";
+    }
+    else {
+        $query = "SELECT picture, picturewidth, pictureheight, dateepoch FROM archerypicture";
     }
 
-    return $pictures;
-}
+    my $pics_array = $self->db->selectall_arrayref($query, { Slice => {}});
 
-sub get_all_pictures {
-    my $self = shift;
-
-    my $pics_array = $self->db->selectall_arrayref("SELECT picture, dateepoch, picturewidth, pictureheight FROM archerypicture", { Slice => {}});
-    
     my $pictures = [];
     foreach my $pic (@{$pics_array}) {
         my $width = $pic->{picturewidth};

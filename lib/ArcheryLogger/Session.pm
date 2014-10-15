@@ -38,7 +38,7 @@ sub show_sessions {
 
     my $sessions = $self->app->get_all_sessions_by_epoch($epoch);
 
-    my $pictures = $self->app->get_all_pictures_by_epoch($epoch);
+    my $pictures = $self->app->get_all_pictures($epoch);
     $self->stash(pictures => $pictures); 
     $self->stash(epoch => $epoch);
     my $auth = $self->app->is_user_authenticated;
