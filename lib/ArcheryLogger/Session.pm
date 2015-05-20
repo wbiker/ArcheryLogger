@@ -52,7 +52,7 @@ sub new_session {
 
   if($self->req->method eq "POST") {
 
-    my $p = $self->req->params->params;
+    my $p = $self->req->params;
     my $params = { @{$p} };
     my $session = {};
     $session->{name} = delete $params->{name};
