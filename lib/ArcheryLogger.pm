@@ -111,16 +111,21 @@ sub get_target_array {
 	my $self = shift;
 	my $parcour_id = shift // 1;
 
-	my $scorevalue = $self->get_scores_by_value();
+	my $scores = $self->get_scores_by_id();
 	my $parcours = $self->get_parcours_by_id();
-	my $targets = {};
-	$targets->{count} = $parcours->{$parcour_id};
-	$targets->{targets} = [];
-	for (my $i=1; $i<=$targets->{count}; $i++) {
-		push($targets->{targets}, { target_id => $i, target_score => $scorevalue->{0} } );
+    my $targets = $self->get_targets_by_id();
+	my $targets_obj = {};
+    $targets_obj->{targets} = [];
+    $targets_obj->{scores} = [];
+	for my $target_id (sort { $a <=> $b } keys %{$targets}) {
+       push($targets_obj->{targets}, {target_id => $target_id, target_name => $targets->{$target_id}}); 
 	}
 
-	return $targets;
+    for my $score_id (sort keys %{$scores}) {
+        next if $score_id == 10;
+		push($targets_obj->{scores}, { score_id => $score_id, score_value => $scores->{$score_id} });
+    }
+	return $targets_obj;
 }
 
 sub store_new_session {

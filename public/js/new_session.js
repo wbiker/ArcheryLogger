@@ -39,15 +39,18 @@ function createTargets(parcourid) {
 
 			targetblock = $('#targetarea');
 			var tr = jQuery('<tr></tr>').appendTo(targetblock);
-			for(var i=1; i<=json.count; i++) {
-				if(i == 11 || i == 21) {
+            json.targets.forEach(function(target) {
+				if(target.target_id == 11 || target.target_id == 21) {
 					tr = jQuery('<tr></tr>').appendTo(targetblock);
 				}
 				var td = jQuery('<td></td>').appendTo(tr);
-				jQuery("<label>Target_" + i + "</label>").appendTo(td);
+				jQuery("<label>Target_" + target.target_id + "</label>").appendTo(td);
 				jQuery('<br>').appendTo(td);
-				jQuery('<input type="checkbox" name="targetid" value="20" id="targetid">20<br>').appendTo(td);
-			}
+                json.scores.forEach(function(scores) {
+				    jQuery('<input type="checkbox" name="' + target.target_id + '" value="' + scores.score_id + '" id="' + target.target_id + '">' + scores.score_value + '</input>').appendTo(td);
+				    jQuery('<br>').appendTo(td);
+                });
+            });
 		})
 		.fail(function(jqxhr, textStatus, error) {
 			var err = textStatus + ", " + error;
