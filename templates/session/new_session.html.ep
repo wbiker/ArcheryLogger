@@ -19,8 +19,9 @@
             <TD><LABEL for="parcour">Parcour:</LABEL>
             <TD>
             <select name="parcour" onchange="parcourChanged(this.value)">
-                <option value="1">20</option>
-                <option value="2" selected>28</option>
+                <option value="1" selected>20</option>
+                <option value="2">28</option>
+				<option value="3">30</option>
             </select>
             </TD>
         </TR>
@@ -47,38 +48,14 @@
     </TABLE>
     <TABLE id="target_table">
     <tbody id="tbody">
-        <TR>
-            <% my $target = 1; %>
-            <% for my $targetid (sort { $a <=> $b } keys %{$targetid}) { %>
-                <TD>
-                    <LABEL>Target_<%= $target %></LABEL><BR>
-                    <INPUT type="checkbox" name="<%= $targetid %>" value="<%= $scorevalue->{20} %>" id="<%= $targetid %>_20">20<br>
-                    <INPUT type="checkbox" name="<%= $targetid %>" value="<%= $scorevalue->{18} %>" id="<%= $targetid %>_18">18<br>
-                    <INPUT type="checkbox" name="<%= $targetid %>" value="<%= $scorevalue->{16} %>" id="<%= $targetid %>_16">16<br>
-                    <INPUT type="checkbox" name="<%= $targetid %>" value="<%= $scorevalue->{14} %>" id="<%= $targetid %>_14">14<br>
-                    <INPUT type="checkbox" name="<%= $targetid %>" value="<%= $scorevalue->{12} %>" id="<%= $targetid %>_12">12<br>
-                    <INPUT type="checkbox" name="<%= $targetid %>" value="<%= $scorevalue->{10} %>" id="<%= $targetid %>_10">10<br>
-                    <INPUT type="checkbox" name="<%= $targetid %>" value="<%= $scorevalue->{8} %>" id="<%= $targetid %>_8">8<br>
-                    <INPUT type="checkbox" name="<%= $targetid %>" value="<%= $scorevalue->{6} %>" id="<%= $targetid %>_6">6<br>
-                    <INPUT type="checkbox" name="<%= $targetid %>" value="<%= $scorevalue->{4} %>" id="<%= $targetid %>_4">4<br>
-                </TD>
-                <% if(0 == $target%10) { %>
-                    </TR>
-                    <% if(20 == $target) { %>
-                        <TR id="lastblock">
-                        <% } else { %>
-                            <TR>
-                        <% } %>
-                <% } %>
-                <% $target++; %>
-            <% } %>
-            </TR>
-        <TR id="submit">
-            <TD>
-            <input type="Submit" value="submit">
-            </TD>
-        </TR>
-        </tbody>
+		<tr id="targetarea">
+		</tr>
+		<TR id="submit">
+			<TD>
+			<input type="Submit" value="submit">
+			</TD>
+		</TR>
+    </tbody>
     </TABLE>
     </DIV>
 </FORM>

@@ -96,6 +96,16 @@ sub new_session {
   }
 }
 
+sub get_targets {
+	my $self = shift;
+	my $parcourid = $self->param('parcourid') // 3;
+
+	my $targets = $self->app->get_target_array($parcourid);
+	say "Got Parcour ID $parcourid";
+
+	$self->render(json => $targets);
+}
+
 sub _get_missed_targets {
     my $self = shift;
     my $targets = shift;

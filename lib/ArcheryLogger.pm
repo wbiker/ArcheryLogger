@@ -72,6 +72,7 @@ sub startup {
   $r->post('/login')->to('Archery#login_check');
   $r->post('/picture/store')->to('Picture#store_picture');
 
+  $r->get('/get_targets')->to('Session#get_targets');
 }
 
 sub remove_session {
@@ -86,7 +87,8 @@ sub remove_session {
 sub get_targets {
     my $self = shift;
     my $params = shift;
-    my $parcour = shift // 28;
+    my $parcour = shift // 30;
+	$parcour += 0;
     my $db = $self->db;
 
     my $scorevalue = $self->get_scores_by_value();
@@ -103,6 +105,22 @@ sub get_targets {
     }
 
     return $targets;
+}
+
+sub get_target_array {
+	my $self = shift;
+	my $parcour_id = shift // 1;
+
+	my $scorevalue = $self->get_scores_by_value();
+	my $parcours = $self->get_parcours_by_id();
+	my $targets = {};
+	$targets->{count} = $parcours->{$parcour_id};
+	$targets->{targets} = [];
+	for (my $i=1; $i<=$targets->{count}; $i++) {
+		push($targets->{targets}, { target_id => $i, target_score => $scorevalue->{0} } );
+	}
+
+	return $targets;
 }
 
 sub store_new_session {
