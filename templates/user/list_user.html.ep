@@ -1,6 +1,9 @@
 % layout 'default';
 % title 'Welcome';
 <% my $sessions = stash("sessions"); %>
+<% my $image_other = stash("image_other") // 0; %>
+<% my $image_recurve = stash("image_recurve") // 0; %>
+<% my $image_compound = stash("image_compound") // 0; %>
 
 <table>
 <tr>
@@ -15,4 +18,12 @@
 % }
 </table>
 
-<img alt="score per hit target chart" src="data:image/png;base64,<%= $image %>" />
+% if($image_other) {
+	<img alt="score per hit target chart" src="data:image/png;base64,<%= $image_other %>" />
+% }
+% if($image_recurve) {
+	<img alt="score per hit target chart" src="data:image/png;base64,<%= $image_recurve %>" />
+% }
+% if($image_compound) {
+	<img alt="score per hit target chart" src="data:image/png;base64,<%= $image_compound %>" />
+% }

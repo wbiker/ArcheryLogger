@@ -201,6 +201,7 @@ sub get_all_sessions {
     				hit_targets => $session->{hit_targets},
 				    note => $note,
                     pi => $session->{pi},
+					bow_id => $session->{bow_id},
         	    });
             }
 		}
