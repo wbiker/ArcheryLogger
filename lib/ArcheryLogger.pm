@@ -117,8 +117,12 @@ sub get_target_array {
 	my $targets_obj = {};
     $targets_obj->{targets} = [];
     $targets_obj->{scores} = [];
+
+	my $parcour_target_count = $parcours->{$parcour_id};
+
 	for my $target_id (sort { $a <=> $b } keys %{$targets}) {
-       push($targets_obj->{targets}, {target_id => $target_id, target_name => $targets->{$target_id}}); 
+		last if 0 >= $parcour_target_count--; # I show only the amount of target according to the parcour determined by the parcour id.
+		push($targets_obj->{targets}, {target_id => $target_id, target_name => $targets->{$target_id}}); 
 	}
 
     for my $score_id (sort keys %{$scores}) {
