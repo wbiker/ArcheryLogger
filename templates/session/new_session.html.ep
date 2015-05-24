@@ -4,6 +4,7 @@
 <% my $targetid = stash("targetid"); %>
 <% my $parcourid = stash("parcourid"); %>
 <% my $nameid = stash("nameid"); %>
+<% my $bowid = stash("bowid"); %>
 <FORM id="ff" action="new_session" method="post">
         <DIV>
     <TABLE>
@@ -12,7 +13,11 @@
             <TD>
                 <select name="name">
 					<% foreach my $key (sort { $nameid->{$a} cmp $nameid->{$b} } keys %$nameid) { %>
-                    	<option value="<%= $key %>"><%= $nameid->{$key} %></option>
+						% if(1 eq $key) {
+							<option value="<%= $key %>" selected><%= $nameid->{$key} %></option>
+						% } else {
+							<option value="<%= $key %>"><%= $nameid->{$key} %></option>
+						% }
 					<% } %>
                 </select>
             </TD>
@@ -41,8 +46,20 @@
 			<td>
 				<label for="note">Note:</label>
 			</td>
-			<td colspan="3">
+			<td colspan="1">
 				<input width="auto" type="text" name="note">
+			</td>
+			<td><label for="bow">Bow:</label>
+			<td>
+				<select name="bow">
+					% foreach my $bow_id (sort keys %{$bowid}) {
+						% if("Other" eq $bowid->{$bow_id}) {
+							<option value="<%= $bow_id %>" selected><%= $bowid->{$bow_id} %></option>
+						% }
+						% else {
+							<option value="<%= $bow_id %>"><%= $bowid->{$bow_id} %></option>
+						% }
+					% }
 			</td>
 		</tr>
     </TABLE>

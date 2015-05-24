@@ -60,6 +60,7 @@ sub new_session {
     $session->{date} = delete $params->{date};
     $session->{level} = delete $params->{level};
 	$session->{note} = delete $params->{note};
+	$session->{bow} = delete $params->{bow};
 
     my $time = Time::Piece->strptime($session->{date}, "%d.%m.%Y");
     $session->{date} = $time->epoch;
@@ -92,7 +93,9 @@ sub new_session {
     my $targetid = $self->app->get_targets_by_id();
     my $parcourid = $self->app->get_targets_by_id();
 	my $nameid = $self->app->get_names_by_id();
-    $self->render(targetid => $targetid, scorevalue => $scorevalue, parcourid => $parcourid, nameid => $nameid);
+	my $bowid = $self->app->get_bows_by_id();
+
+    $self->render(targetid => $targetid, scorevalue => $scorevalue, parcourid => $parcourid, nameid => $nameid, bowid => $bowid);
   }
 }
 
@@ -101,7 +104,6 @@ sub get_targets {
 	my $parcourid = $self->param('parcourid') // 3;
 
 	my $targets = $self->app->get_target_array($parcourid);
-	say "Got Parcour ID $parcourid";
 
 	$self->render(json => $targets);
 }

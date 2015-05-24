@@ -137,14 +137,14 @@ sub store_new_session {
     my $session = shift;
 
     my $db = $self->db;
-    my $insert_sth = $db->prepare("INSERT INTO archerysession(parcourid, nameid, levelid, date_epoch, max_score, score_per_target, missed_targets, hit_targets, score_per_hit_targets, note, pi) VALUES(?,?,?,?,?,?,?,?,?,?,?)");
+    my $insert_sth = $db->prepare("INSERT INTO archerysession(parcourid, nameid, levelid, date_epoch, max_score, score_per_target, missed_targets, hit_targets, score_per_hit_targets, note, pi, bow_id) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)");
 
 	# bug warning:
 	# $session->{level} is the levelid. At the moment it works because 
 	# Red is 1, blue is 2 and green is 3.
 	# Should that change in the future the pi feature will be broken.
 	my $pi = int(($session->{hit_targets} * $session->{score_per_target}) / $session->{level});
-    my $rc = $insert_sth->execute($session->{parcour}, $session->{name}, $session->{level}, $session->{date}, $session->{total_score}, $session->{score_per_target}, $session->{missed_targets}, $session->{hit_targets}, $session->{score_per_hit_targets}, $session->{note}, $pi);
+    my $rc = $insert_sth->execute($session->{parcour}, $session->{name}, $session->{level}, $session->{date}, $session->{total_score}, $session->{score_per_target}, $session->{missed_targets}, $session->{hit_targets}, $session->{score_per_hit_targets}, $session->{note}, $pi, $session->{bow});
     
     my $session_id = $db->last_insert_id(undef, undef, 'archerysession', undef);
     if($session_id) {
@@ -276,6 +276,20 @@ sub get_parcours_by_id {
     }
 
     return $parcours;
+}
+
+sub get_bows_by_id {
+	my $self = shift;
+	my $db = $self->db;
+
+	my $bow_ref = $db->selectall_hashref('SELECT * FROM archerybow', 'bow_id');
+
+	my $bows = {};
+	foreach my $bow_id (keys %{$bow_ref}) {
+		$bows->{$bow_id} = $bow_ref->{$bow_id}->{bow_name};
+	}
+
+	return $bows;
 }
 
 sub get_scores_by_id {
