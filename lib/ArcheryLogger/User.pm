@@ -23,7 +23,7 @@ sub list_user {
 
     # create image
     # first gather values
-    my @data = ( [], [] );
+    my @data = ();
 	my @recurve = ();
 	my @compound = ();
     for my $session (@{$sessions}) {
@@ -38,6 +38,7 @@ sub list_user {
 			push($compound[1], $session->{score_per_hit_targets});
 		}
 		if(1 == $session->{bow_id}) {
+			@data = ([],[]) unless @data;
 			push($data[0], $session->{date});
 			push($data[1], $session->{score_per_hit_targets});
 		}

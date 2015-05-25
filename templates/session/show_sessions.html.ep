@@ -15,6 +15,7 @@
 				<th>MissedTargets:</Th>
 				<th>ScorePerHitTargets:</Th>
                 <th>PI</th>
+                <th>Bow</th>
 				<th>Note:</Th>
 				<% if($authorized) { %>
 					<th>Delete</th>
@@ -48,6 +49,9 @@
 					</td>
                     <td>
                         <%= $session->{pi} %>
+                    </td>
+                    <td>
+                        <%= $session->{bow} %>
                     </td>
 					<td>
 						<%= decode_utf8($session->{note}) %>

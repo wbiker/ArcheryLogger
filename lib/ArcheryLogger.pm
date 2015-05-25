@@ -171,6 +171,7 @@ sub get_all_sessions {
     my $names = $self->get_names_by_id();
     my $parcours = $self->get_parcours_by_id();
     my $levels = $self->get_levels_by_id();
+	my $bows = $self->get_bow_kind_by_id();
 
     my $sessions = [];
     my $sth = $db->prepare("SELECT * FROM archerysession");
@@ -201,6 +202,7 @@ sub get_all_sessions {
     				hit_targets => $session->{hit_targets},
 				    note => $note,
                     pi => $session->{pi},
+					bow => $bows->{$session->{bow_id}},
 					bow_id => $session->{bow_id},
         	    });
             }
@@ -288,6 +290,20 @@ sub get_bows_by_id {
 	my $bows = {};
 	foreach my $bow_id (keys %{$bow_ref}) {
 		$bows->{$bow_id} = $bow_ref->{$bow_id}->{bow_name};
+	}
+
+	return $bows;
+}
+
+sub get_bow_kind_by_id {
+	my $self = shift;
+	my $db = $self->db;
+
+	my $bow_ref = $db->selectall_hashref('SELECT * FROM archerybow', 'bow_id');
+
+	my $bows = {};
+	foreach my $bow_id (keys %{$bow_ref}) {
+		$bows->{$bow_id} = $bow_ref->{$bow_id}->{bow_kind};
 	}
 
 	return $bows;
