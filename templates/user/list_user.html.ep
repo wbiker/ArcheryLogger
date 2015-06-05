@@ -1,29 +1,41 @@
 % layout 'default';
 % title 'Welcome';
-<% my $sessions = stash("sessions"); %>
-<% my $image_other = stash("image_other") // 0; %>
-<% my $image_recurve = stash("image_recurve") // 0; %>
-<% my $image_compound = stash("image_compound") // 0; %>
+<% my $user_id = stash("user_id"); %>
 
-<table>
-<tr>
-<th>Date</th>
-<th>Score Per Hit Target</th>
-</tr>
-% for my $session (@{$sessions}) {
-<tr>
-<td><%= $session->{date} %></td>
-<td><%= $session->{score_per_hit_targets} %></td>
-</tr>
-% }
-</table>
+<div id="container" style="width:100%; height:400px;"></div>
 
-% if($image_other) {
-	<img alt="score per hit target chart" src="data:image/png;base64,<%= $image_other %>" />
-% }
-% if($image_recurve) {
-	<img alt="score per hit target chart" src="data:image/png;base64,<%= $image_recurve %>" />
-% }
-% if($image_compound) {
-	<img alt="score per hit target chart" src="data:image/png;base64,<%= $image_compound %>" />
-% }
+<script>
+$(document).ready(function () { 
+	$.get("/users/<%= $user_id %>/get_statistic", function(resp) {
+
+		$('#container').highcharts({
+			chart: {
+				type: 'spline'
+			},
+			title: {
+				text: 'Scoring'
+			},
+			xAxis: {
+				title: {
+					text: 'Date'
+				},
+			},
+			yAxis: {
+				title: {
+					text: 'Score/Target'
+				}
+			},
+			series: [{
+				name: "Unknown",
+				data: resp.data
+			}, {
+				name: "Recurve",
+				data: resp.recurve
+			}, {
+				name: "Compound",
+				data: resp.compound
+			}]
+		});
+	});
+});	
+</script>

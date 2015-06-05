@@ -15,6 +15,13 @@ sub list_users {
 sub list_user {
     my $self = shift;
 
+	my $user_id = $self->param('user_id');
+	$self->stash(user_id => $user_id);
+}
+
+sub get_statistic {
+	my $self = shift;
+
     my $user_id = $self->param('user_id');
 
     my $sessions = $self->app->get_all_sessions($user_id, "all");
@@ -28,46 +35,31 @@ sub list_user {
 	my @compound = ();
     for my $session (@{$sessions}) {
 		if(2 == $session->{bow_id}) {
-			@recurve = ([],[]) unless @recurve;
-			push($recurve[0], $session->{date});
-			push($recurve[1], $session->{score_per_hit_targets});
+			push(@recurve, [$session->{date}, $session->{score_per_hit_targets}]);
 		}
 		if(3 == $session->{bow_id}) {
-			@compound = ([],[]) unless @compound;
-			push($compound[0], $session->{date});
-			push($compound[1], $session->{score_per_hit_targets});
+			push(@compound, [$session->{date}, $session->{score_per_hit_targets}]);
 		}
 		if(1 == $session->{bow_id}) {
-			@data = ([],[]) unless @data;
-			push($data[0], $session->{date});
-			push($data[1], $session->{score_per_hit_targets});
+			push(@data, [$session->{date}, $session->{score_per_hit_targets}]);
 		}
     }
 
-    my $g = GD::Graph::lines->new();
-    $g->set(zero_axis => 1, values_vertical => 1, x_number_format => \&turn_label);
+	my $data_to_send = {};
+
 	if(@data) {
-		my $gd = $g->plot(\@data) or print $g->error;
-    
-		my $image_base64_enc = encode_base64($gd->png);
-		$self->stash(image_other => $image_base64_enc);
+		push(@{$data_to_send->{data}}, @data);
 	}
-    $g = GD::Graph::lines->new();
-    $g->set(zero_axis => 1, values_vertical => 1, x_number_format => \&turn_label);
-	if(@recurve) {
-		my $gd = $g->plot(\@recurve) or print $g->error;
-    
-		my $image_base64_enc = encode_base64($gd->png);
-		$self->stash(image_recurve => $image_base64_enc);
-	}
-    $g = GD::Graph::lines->new();
-    $g->set(zero_axis => 1, values_vertical => 1, x_number_format => \&turn_label);
+	
 	if(@compound) {
-		my $gd = $g->plot(\@compound) or print $g->error;
-    
-		my $image_base64_enc = encode_base64($gd->png);
-		$self->stash(image_compound => $image_base64_enc);
+		push(@{$data_to_send->{compound}}, @compound);
 	}
+
+	if(@recurve) {
+		push(@{$data_to_send->{recurve}}, @recurve);
+	}
+
+	$self->render(json => $data_to_send);
 }
 
 sub turn_label {

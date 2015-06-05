@@ -73,6 +73,7 @@ sub startup {
   $r->post('/picture/store')->to('Picture#store_picture');
 
   $r->get('/get_targets')->to('Session#get_targets');
+  $r->get('/users/:user_id/get_statistic')->to('User#get_statistic');
 }
 
 sub remove_session {
@@ -174,7 +175,7 @@ sub get_all_sessions {
 	my $bows = $self->get_bow_kind_by_id();
 
     my $sessions = [];
-    my $sth = $db->prepare("SELECT * FROM archerysession");
+    my $sth = $db->prepare("SELECT * FROM archerysession ORDER BY date_epoch ASC");
     $sth->execute;
     while(my $session = $sth->fetchrow_hashref) {
         my $date = $session->{date_epoch};
