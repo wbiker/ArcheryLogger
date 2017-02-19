@@ -24,15 +24,22 @@ $(document).ready(function () {
 				title: {
 					text: 'Score/Target'
 				}
+	 		},
+			plotOptions: {
+		    	spline: {
+	        		dataLabels: {
+		            	enabled: true
+        			}
+   				 }
 			},
 			series: [{
 				name: "Unknown",
 				data: resp.data
 			}, {
-				name: "Recurve",
+				name: "Hoyt Tiburion",
 				data: resp.recurve
 			}, {
-				name: "Compound",
+				name: "Win&Win Genio-7",
 				data: resp.compound
 			}]
 		});
